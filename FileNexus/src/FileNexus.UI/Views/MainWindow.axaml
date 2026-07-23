@@ -1,0 +1,282 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FileNexus.UI.ViewModels"
+        xmlns:models="using:FileNexus.Shared.Models"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="FileNexus.UI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="FileNexus — Modern Desktop Virtual File Library"
+        Width="1280" Height="820"
+        WindowStartupLocation="CenterScreen"
+        Background="#0F172A">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto, *, Auto">
+        <!-- TOP HEADER BAR -->
+        <Border Grid.Row="0" Background="#1E293B" BorderBrush="#334155" BorderThickness="0,0,0,1" Padding="16,12">
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <!-- App Logo & Title -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <Border CornerRadius="8" Background="#6366F1" Width="36" Height="36">
+                        <TextBlock Text="FN" Foreground="White" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="FileNexus" Foreground="White" FontWeight="Bold" FontSize="18"/>
+                        <TextBlock Text="Virtual Library Manager" Foreground="#94A3B8" FontSize="11"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Search Input Box -->
+                <Border Grid.Column="1" Margin="32,0" Background="#0F172A" CornerRadius="8" BorderBrush="#334155" BorderThickness="1" HorizontalAlignment="Stretch">
+                    <Grid ColumnDefinitions="Auto, *">
+                        <TextBlock Grid.Column="0" Text="🔍" Foreground="#64748B" VerticalAlignment="Center" Margin="12,0,8,0"/>
+                        <TextBox Grid.Column="1" Text="{Binding SearchText, Mode=TwoWay}" PlaceholderText="Search files by name, extension, path, or tags..." 
+                                 Background="Transparent" BorderThickness="0" Foreground="White" Padding="0,8" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- Actions & Status -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                    <Border Background="#1E1B4B" CornerRadius="12" Padding="10,5">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="Files Indexed:" Foreground="#A5B4FC" FontSize="12" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding TotalFileCount}" Foreground="#818CF8" FontWeight="Bold" FontSize="13" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Command="{Binding ToggleFolderManagerCommand}" Background="#3B82F6" Foreground="White" CornerRadius="6" Padding="12,8">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="➕"/>
+                            <TextBlock Text="Index Folder"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding ScanWorkspaceCommand}" IsEnabled="{Binding !IsScanning}" Background="#334155" Foreground="White" CornerRadius="6" Padding="12,8">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="🔄"/>
+                            <TextBlock Text="Re-Scan"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- MAIN BODY SECTION -->
+        <Grid Grid.Row="1" ColumnDefinitions="260, *, 300">
+            <!-- LEFT SIDEBAR -->
+            <Border Grid.Column="0" Background="#1E293B" BorderBrush="#334155" BorderThickness="0,0,1,0" Padding="12">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="16">
+                        <!-- Workspace Selector -->
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="WORKSPACE" Foreground="#64748B" FontSize="11" FontWeight="SemiBold"/>
+                            <ComboBox ItemsSource="{Binding Workspaces}" SelectedItem="{Binding SelectedWorkspace}" HorizontalAlignment="Stretch" Background="#0F172A" Foreground="White" CornerRadius="6">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="models:Workspace">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="📁"/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <!-- Virtual Categories List -->
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="VIRTUAL CATEGORIES" Foreground="#64748B" FontSize="11" FontWeight="SemiBold"/>
+                            <ItemsControl ItemsSource="{Binding Categories}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:CategoryItemViewModel">
+                                        <Button Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SelectCategoryCommand}" CommandParameter="{Binding}"
+                                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Background="Transparent" Padding="8,6" Margin="0,2" CornerRadius="6">
+                                            <Grid ColumnDefinitions="Auto, *, Auto">
+                                                <TextBlock Grid.Column="0" Text="{Binding Icon}" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="White" VerticalAlignment="Center" FontSize="13"/>
+                                                <Border Grid.Column="2" Background="{Binding BadgeColor}" CornerRadius="10" Padding="8,2">
+                                                    <TextBlock Text="{Binding Count}" Foreground="White" FontSize="11" FontWeight="Bold"/>
+                                                </Border>
+                                            </Grid>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <!-- Quick Filters -->
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="QUICK FILTERS" Foreground="#64748B" FontSize="11" FontWeight="SemiBold"/>
+                            <ToggleButton IsChecked="{Binding OnlyFavorites, Mode=TwoWay}" HorizontalAlignment="Stretch" Background="#0F172A" Foreground="White" Padding="10,8" CornerRadius="6">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="⭐"/>
+                                    <TextBlock Text="Favorites Only"/>
+                                </StackPanel>
+                            </ToggleButton>
+                        </StackPanel>
+
+                        <!-- Extension Chips Filter -->
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="TOP EXTENSIONS" Foreground="#64748B" FontSize="11" FontWeight="SemiBold"/>
+                            <ItemsControl ItemsSource="{Binding Extensions}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:ExtensionItemViewModel">
+                                        <Button Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SelectExtensionCommand}" CommandParameter="{Binding}"
+                                                Margin="2" Padding="6,3" Background="#334155" Foreground="#E2E8F0" CornerRadius="4" FontSize="11">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="."/>
+                                                <TextBlock Text="{Binding Extension}"/>
+                                                <TextBlock Text=" (" Foreground="#94A3B8"/>
+                                                <TextBlock Text="{Binding Count}" Foreground="#94A3B8"/>
+                                                <TextBlock Text=")" Foreground="#94A3B8"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!-- CENTER FILE LIST PANEL -->
+            <Grid Grid.Column="1" RowDefinitions="Auto, *">
+                <!-- Indexed Folder Modal Drawer -->
+                <Border Grid.Row="0" IsVisible="{Binding IsFolderManagerOpen}" Background="#1E293B" BorderBrush="#334155" BorderThickness="0,0,0,1" Padding="16">
+                    <Grid ColumnDefinitions="*, Auto, Auto">
+                        <TextBox Grid.Column="0" Text="{Binding NewFolderPath, Mode=TwoWay}" PlaceholderText="Enter folder path to index (e.g., /home/user/Downloads or C:\Documents)..." 
+                                 Background="#0F172A" Foreground="White" BorderBrush="#334155" CornerRadius="6" Padding="10,8" Margin="0,0,8,0"/>
+                        <Button Grid.Column="1" Command="{Binding AddWorkspaceFolderCommand}" Background="#10B981" Foreground="White" CornerRadius="6" Padding="14,8" Margin="0,0,8,0">
+                            <TextBlock Text="Start Indexing"/>
+                        </Button>
+                        <Button Grid.Column="2" Command="{Binding ToggleFolderManagerCommand}" Background="#334155" Foreground="White" CornerRadius="6" Padding="10,8">
+                            <TextBlock Text="Cancel"/>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <!-- File Records DataGrid / List -->
+                <ListBox Grid.Row="1" ItemsSource="{Binding Files}" SelectedItem="{Binding SelectedFile}" Background="Transparent" Padding="8">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="models:FileItem">
+                            <Border Background="#1E293B" CornerRadius="6" Padding="12,10" Margin="0,3" BorderBrush="#334155" BorderThickness="1">
+                                <Grid ColumnDefinitions="Auto, *, Auto, Auto">
+                                    <!-- Category Badge -->
+                                    <Border Grid.Column="0" Background="#334155" CornerRadius="4" Padding="8,4" VerticalAlignment="Center" Margin="0,0,12,0">
+                                        <TextBlock Text="{Binding Extension, StringFormat='.{0}'}" Foreground="#38BDF8" FontWeight="Bold" FontSize="11"/>
+                                    </Border>
+
+                                    <!-- File Info -->
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                        <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="SemiBold" FontSize="14"/>
+                                        <TextBlock Text="{Binding AbsolutePath}" Foreground="#94A3B8" FontSize="11" TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+
+                                    <!-- Size & Modified -->
+                                    <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="16,0" Spacing="2">
+                                        <TextBlock Text="{Binding FormattedSize}" Foreground="#E2E8F0" FontSize="12" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="{Binding ModifiedAt, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}" Foreground="#64748B" FontSize="11" HorizontalAlignment="Right"/>
+                                    </StackPanel>
+
+                                    <!-- Favorite Button -->
+                                    <Button Grid.Column="3" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ToggleFavoriteCommand}" CommandParameter="{Binding}"
+                                            Background="Transparent" Padding="6" VerticalAlignment="Center">
+                                        <TextBlock Text="⭐" Opacity="{Binding IsFavorite}"/>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
+            <!-- RIGHT DETAILS DRAWER -->
+            <Border Grid.Column="2" Background="#1E293B" BorderBrush="#334155" BorderThickness="1,0,0,0" Padding="16">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="16" IsVisible="{Binding SelectedFile, Converter={x:Static ObjectConverters.IsNotNull}}">
+                        <TextBlock Text="FILE DETAILS" Foreground="#64748B" FontSize="11" FontWeight="SemiBold"/>
+
+                        <!-- Large Icon & Name -->
+                        <Border Background="#0F172A" CornerRadius="8" Padding="16" HorizontalAlignment="Stretch">
+                            <StackPanel Spacing="8" HorizontalAlignment="Center">
+                                <TextBlock Text="📄" FontSize="42" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding SelectedFile.Name}" Foreground="White" FontWeight="Bold" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"/>
+                                <Border Background="#38BDF8" CornerRadius="4" Padding="6,2" HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding SelectedFile.Extension, StringFormat='.{0}'}" Foreground="#0F172A" FontWeight="Bold" FontSize="11"/>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Quick Action Buttons -->
+                        <Grid ColumnDefinitions="*, *">
+                            <Button Grid.Column="0" Command="{Binding OpenFileCommand}" CommandParameter="{Binding SelectedFile}" Background="#3B82F6" Foreground="White" CornerRadius="6" Padding="10,8" Margin="0,0,4,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                                <TextBlock Text="Open File"/>
+                            </Button>
+                            <Button Grid.Column="1" Command="{Binding OpenFolderCommand}" CommandParameter="{Binding SelectedFile}" Background="#334155" Foreground="White" CornerRadius="6" Padding="10,8" Margin="4,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                                <TextBlock Text="Open Folder"/>
+                            </Button>
+                        </Grid>
+
+                        <!-- Metadata Table -->
+                        <StackPanel Spacing="10">
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="Full Path" Foreground="#64748B" FontSize="11"/>
+                                <SelectableTextBlock Text="{Binding SelectedFile.AbsolutePath}" Foreground="#E2E8F0" FontSize="12" TextWrapping="Wrap"/>
+                            </StackPanel>
+
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="File Size" Foreground="#64748B" FontSize="11"/>
+                                <TextBlock Text="{Binding SelectedFile.FormattedSize}" Foreground="#E2E8F0" FontSize="12" FontWeight="SemiBold"/>
+                            </StackPanel>
+
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="Category" Foreground="#64748B" FontSize="11"/>
+                                <TextBlock Text="{Binding SelectedFile.Category}" Foreground="#E2E8F0" FontSize="12"/>
+                            </StackPanel>
+
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="Last Modified" Foreground="#64748B" FontSize="11"/>
+                                <TextBlock Text="{Binding SelectedFile.ModifiedAt, StringFormat='{}{0:f}'}" Foreground="#E2E8F0" FontSize="12"/>
+                            </StackPanel>
+
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="Indexed Date" Foreground="#64748B" FontSize="11"/>
+                                <TextBlock Text="{Binding SelectedFile.CreatedAt, StringFormat='{}{0:f}'}" Foreground="#E2E8F0" FontSize="12"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Tags Editor -->
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="TAGS" Foreground="#64748B" FontSize="11" FontWeight="SemiBold"/>
+                            <TextBox Text="{Binding SelectedFile.Tags, Mode=TwoWay}" PlaceholderText="Add tags (comma separated)..." Background="#0F172A" Foreground="White" BorderBrush="#334155" CornerRadius="6" Padding="8"/>
+                            <Button Command="{Binding SaveTagsCommand}" CommandParameter="{Binding SelectedFile.Tags}" Background="#334155" Foreground="White" CornerRadius="4" Padding="8,4" HorizontalAlignment="Right">
+                                <TextBlock Text="Save Tags" FontSize="11"/>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <!-- FOOTER STATUS BAR -->
+        <Border Grid.Row="2" Background="#1E293B" BorderBrush="#334155" BorderThickness="0,1,0,0" Padding="16,8">
+            <Grid ColumnDefinitions="*, Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="●" Foreground="#10B981" VerticalAlignment="Center" FontSize="10"/>
+                    <TextBlock Text="{Binding StatusMessage}" Foreground="#94A3B8" FontSize="12" VerticalAlignment="Center"/>
+                </StackPanel>
+                <TextBlock Grid.Column="1" Text="FileNexus v0.1.0 • Privacy-First Virtual Indexer" Foreground="#64748B" FontSize="11" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
