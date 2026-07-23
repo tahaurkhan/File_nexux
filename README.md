@@ -1,7 +1,7 @@
 # FileNexus
 
 <p align="center">
-  <img src="assets/banner.png" alt="FileNexus Banner" width="100%" />
+  <img src="FileNexus/assets/banner.png" alt="FileNexus Banner" width="100%" />
 </p>
 
 <p align="center">
