@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:FileNexus.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="40"
+             x:Class="FileNexus.UI.Views.Controls.ExtensionPanelControl"
+             x:DataType="vm:MainWindowViewModel">
+
+    <Border Background="#0F172A" BorderBrush="#1E293B" BorderThickness="0,0,0,1" Padding="16,6"
+            IsVisible="{Binding Extensions.Count}">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <TextBlock Text="EXTENSIONS:" Foreground="#475569" FontSize="10" FontWeight="Bold" 
+                           VerticalAlignment="Center" Margin="0,0,6,0"/>
+
+                <!-- All Extensions Reset Chip -->
+                <Button Command="{Binding SelectExtensionCommand}" CommandParameter="{x:Null}"
+                        Classes="ext-chip" Classes.active="{Binding SelectedExtension, Converter={x:Static ObjectConverters.IsNull}}">
+                    <TextBlock Text="All Extensions"/>
+                </Button>
+
+                <!-- List of Extension Filter Chips -->
+                <ItemsControl ItemsSource="{Binding Extensions}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="4"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ExtensionItemViewModel">
+                            <Button Command="{Binding $parent[UserControl].((vm:MainWindowViewModel)DataContext).SelectExtensionCommand}" 
+                                    CommandParameter="{Binding}"
+                                    Classes="ext-chip" Classes.active="{Binding IsSelected}">
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <TextBlock Text="."/>
+                                    <TextBlock Text="{Binding Extension}"/>
+                                    <TextBlock Text="{Binding Count, StringFormat=' ({0})'}" Opacity="0.75"/>
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</UserControl>

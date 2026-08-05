@@ -1,0 +1,67 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:FileNexus.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="45"
+             x:Class="FileNexus.UI.Views.Controls.QuickActionBarControl"
+             x:DataType="vm:MainWindowViewModel">
+
+    <Border Background="#0B0F19" BorderBrush="#1E293B" BorderThickness="0,0,0,1" Padding="16,6">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <!-- Label indicator -->
+                <TextBlock Text="QUICK ACTIONS" Foreground="#475569" FontSize="10" FontWeight="Bold" 
+                           VerticalAlignment="Center" Margin="0,0,8,0"/>
+
+                <!-- Scan Folder Button -->
+                <Button Command="{Binding ToggleFolderManagerCommand}" Classes="quick-action">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="📂" FontSize="13"/>
+                        <TextBlock Text="Scan Folder"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Refresh Index Button -->
+                <Button Command="{Binding ScanWorkspaceCommand}" IsEnabled="{Binding !IsScanning}" Classes="quick-action">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="🔄" FontSize="13"/>
+                        <TextBlock Text="Refresh Index"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- New Workspace Button -->
+                <Button Command="{Binding NewWorkspaceCommand}" Classes="quick-action">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="➕" FontSize="13"/>
+                        <TextBlock Text="New Workspace"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Find Duplicates Button -->
+                <Button Command="{Binding OpenDuplicatesCommand}" Classes="quick-action">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="🗑️" FontSize="13"/>
+                        <TextBlock Text="Find Duplicates"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Recent Files Button -->
+                <Button Command="{Binding OpenRecentCommand}" Classes="quick-action">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="🕒" FontSize="13"/>
+                        <TextBlock Text="Recent Files"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Settings Button -->
+                <Button Command="{Binding OpenSettingsCommand}" Classes="quick-action">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="⚙️" FontSize="13"/>
+                        <TextBlock Text="Settings"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</UserControl>

@@ -11,5 +11,6 @@
   
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="avares://FileNexus.UI/Styles/NavigationStyles.axaml"/>
     </Application.Styles>
 </Application>
