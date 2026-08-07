@@ -19,7 +19,7 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
     }
 
-    public override async void OnFrameworkInitializationCompleted()
+    public override void OnFrameworkInitializationCompleted()
     {
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddFileNexusServices();
@@ -27,9 +27,16 @@ public partial class App : Application
 
         Services = serviceCollection.BuildServiceProvider();
 
-        // Initialize SQLite Database Context WAL mode asynchronously
+        // Initialize SQLite Database Context WAL mode synchronously
         var dbInitializer = Services.GetRequiredService<IDatabaseInitializer>();
-        await dbInitializer.InitializeAsync();
+        try
+        {
+            dbInitializer.InitializeAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Database initialization error: {ex.Message}");
+        }
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

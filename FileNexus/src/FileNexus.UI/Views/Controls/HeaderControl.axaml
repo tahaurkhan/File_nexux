@@ -17,7 +17,13 @@
                 </Button>
 
                 <!-- App Logo -->
-                <Border CornerRadius="10" Background="LinearGradient(45deg, #6366F1, #3B82F6)" Width="36" Height="36">
+                <Border CornerRadius="10" Width="36" Height="36">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                            <GradientStop Color="#6366F1" Offset="0"/>
+                            <GradientStop Color="#3B82F6" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
                     <TextBlock Text="⚡" Foreground="White" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
 

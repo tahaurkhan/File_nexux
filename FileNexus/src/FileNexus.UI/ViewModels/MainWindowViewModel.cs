@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FileNexus.Core.Services;
@@ -23,91 +24,98 @@ public partial class MainWindowViewModel : ViewModelBase
 
     // Sidebar & Navigation State
     [ObservableProperty]
-    private bool _isSidebarCollapsed;
+    public partial bool IsSidebarCollapsed { get; set; }
 
     [ObservableProperty]
-    private double _sidebarWidth = 250;
+    public partial double SidebarWidth { get; set; } = 250;
 
     [ObservableProperty]
-    private string _sidebarToggleIcon = "◀";
+    public partial string SidebarToggleIcon { get; set; } = "◀";
 
     [ObservableProperty]
-    private string _activeSectionGroup = "Dashboard";
+    public partial string ActiveSectionGroup { get; set; } = "Dashboard";
 
     [ObservableProperty]
-    private string _breadcrumbPath = "Dashboard Overview";
+    public partial string BreadcrumbPath { get; set; } = "Dashboard Overview";
 
     [ObservableProperty]
-    private bool _isDarkMode = true;
+    public partial bool IsDarkMode { get; set; } = true;
 
     [ObservableProperty]
-    private string _themeIcon = "🌙";
+    public partial string ThemeIcon { get; set; } = "🌙";
 
     // Navigation Hierarchy
     [ObservableProperty]
-    private NavigationItemViewModel _dashboardNavItem = null!;
+    public partial NavigationItemViewModel DashboardNavItem { get; set; } = null!;
 
     [ObservableProperty]
-    private ObservableCollection<NavigationItemViewModel> _libraryNavItems = new();
+    public partial ObservableCollection<NavigationItemViewModel> LibraryNavItems { get; set; } = [];
 
     [ObservableProperty]
-    private ObservableCollection<NavigationItemViewModel> _smartNavItems = new();
+    public partial ObservableCollection<NavigationItemViewModel> SmartNavItems { get; set; } = [];
 
     [ObservableProperty]
-    private ObservableCollection<NavigationItemViewModel> _toolsNavItems = new();
+    public partial ObservableCollection<NavigationItemViewModel> ToolsNavItems { get; set; } = [];
 
     [ObservableProperty]
-    private NavigationItemViewModel? _selectedNavItem;
+    public partial NavigationItemViewModel? SelectedNavItem { get; set; }
 
     // Workspace & Core Collections
     [ObservableProperty]
-    private ObservableCollection<Workspace> _workspaces = new();
+    public partial ObservableCollection<Workspace> Workspaces { get; set; } = [];
 
     [ObservableProperty]
-    private Workspace? _selectedWorkspace;
+    public partial Workspace? SelectedWorkspace { get; set; }
 
     [ObservableProperty]
-    private ObservableCollection<CategoryItemViewModel> _categories = new();
+    public partial ObservableCollection<CategoryItemViewModel> Categories { get; set; } = [];
 
     [ObservableProperty]
-    private CategoryItemViewModel? _selectedCategory;
+    public partial CategoryItemViewModel? SelectedCategory { get; set; }
 
     [ObservableProperty]
-    private ObservableCollection<ExtensionItemViewModel> _extensions = new();
+    public partial ObservableCollection<ExtensionItemViewModel> Extensions { get; set; } = [];
 
     [ObservableProperty]
-    private ExtensionItemViewModel? _selectedExtension;
+    public partial ExtensionItemViewModel? SelectedExtension { get; set; }
 
     [ObservableProperty]
-    private ObservableCollection<FileItem> _files = new();
+    public partial ObservableCollection<FileItem> Files { get; set; } = [];
 
     [ObservableProperty]
-    private FileItem? _selectedFile;
+    public partial FileItem? SelectedFile { get; set; }
 
     [ObservableProperty]
-    private string _searchText = string.Empty;
+    public partial string SearchText { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _onlyFavorites;
+    public partial bool OnlyFavorites { get; set; }
 
     [ObservableProperty]
-    private long _totalFileCount;
+    public partial long TotalFileCount { get; set; }
 
     [ObservableProperty]
-    private bool _isScanning;
+    public partial bool IsScanning { get; set; }
 
     [ObservableProperty]
-    private string _statusMessage = "Ready";
+    public partial string StatusMessage { get; set; } = "Ready";
 
     [ObservableProperty]
-    private string _newFolderPath = string.Empty;
+    public partial string NewFolderPath { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _isFolderManagerOpen;
+    public partial bool IsFolderManagerOpen { get; set; }
+
+    [ObservableProperty]
+    public partial DashboardViewModel DashboardVM { get; set; } = null!;
+
+    [ObservableProperty]
+    public partial bool IsDashboardView { get; set; } = true;
 
     public MainWindowViewModel()
     {
         // Design-time constructor
+        DashboardVM = new DashboardViewModel();
         InitializeCategories();
         InitializeNavigation();
     }
@@ -117,6 +125,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _workspaceService = workspaceService;
         _fileService = fileService;
 
+        DashboardVM = new DashboardViewModel(_workspaceService, _fileService, OnDashboardNavigate);
         InitializeCategories();
         InitializeNavigation();
         _ = InitializeAsync();
@@ -124,8 +133,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void InitializeCategories()
     {
-        Categories = new ObservableCollection<CategoryItemViewModel>
-        {
+        Categories =
+        [
             new() { Category = FileCategory.All, Name = "All Files", Icon = "📚", BadgeColor = "#6366F1", IsSelected = true },
             new() { Category = FileCategory.Books, Name = "Books & PDFs", Icon = "📖", BadgeColor = "#EC4899" },
             new() { Category = FileCategory.Documents, Name = "Documents", Icon = "📄", BadgeColor = "#3B82F6" },
@@ -136,7 +145,7 @@ public partial class MainWindowViewModel : ViewModelBase
             new() { Category = FileCategory.Archives, Name = "Archives", Icon = "📦", BadgeColor = "#64748B" },
             new() { Category = FileCategory.Executables, Name = "Executables", Icon = "⚙️", BadgeColor = "#EF4444" },
             new() { Category = FileCategory.Other, Name = "Other Files", Icon = "📁", BadgeColor = "#94A3B8" }
-        };
+        ];
         SelectedCategory = Categories.First();
     }
 
@@ -152,8 +161,8 @@ public partial class MainWindowViewModel : ViewModelBase
             Tooltip = "Dashboard Overview"
         };
 
-        LibraryNavItems = new ObservableCollection<NavigationItemViewModel>
-        {
+        LibraryNavItems =
+        [
             new() { Id = "Doc", Title = "Documents", Icon = "📄", Group = NavigationGroup.Library, Category = FileCategory.Documents, BadgeColor = "#3B82F6", Tooltip = "Documents & PDFs" },
             new() { Id = "Img", Title = "Images", Icon = "🖼", Group = NavigationGroup.Library, Category = FileCategory.Images, BadgeColor = "#10B981", Tooltip = "Images & Graphics" },
             new() { Id = "Vid", Title = "Videos", Icon = "🎥", Group = NavigationGroup.Library, Category = FileCategory.Videos, BadgeColor = "#F59E0B", Tooltip = "Videos & Clips" },
@@ -162,23 +171,23 @@ public partial class MainWindowViewModel : ViewModelBase
             new() { Id = "Arc", Title = "Archives", Icon = "📦", Group = NavigationGroup.Library, Category = FileCategory.Archives, BadgeColor = "#64748B", Tooltip = "Compressed Archives" },
             new() { Id = "Exe", Title = "Executables", Icon = "⚙", Group = NavigationGroup.Library, Category = FileCategory.Executables, BadgeColor = "#EF4444", Tooltip = "Applications & Binaries" },
             new() { Id = "Fol", Title = "Folders", Icon = "📁", Group = NavigationGroup.Library, Category = FileCategory.Other, BadgeColor = "#94A3B8", Tooltip = "Virtual Folders" }
-        };
+        ];
 
-        SmartNavItems = new ObservableCollection<NavigationItemViewModel>
-        {
+        SmartNavItems =
+        [
             new() { Id = "Fav", Title = "Favorites", Icon = "⭐", Group = NavigationGroup.SmartCollections, SmartCollection = SmartCollectionType.Favorites, BadgeColor = "#F59E0B", Tooltip = "Starred Favorites" },
             new() { Id = "Dup", Title = "Duplicates", Icon = "🗑", Group = NavigationGroup.SmartCollections, SmartCollection = SmartCollectionType.Duplicates, BadgeColor = "#EF4444", Tooltip = "Duplicate Files" },
             new() { Id = "Rec", Title = "Recent", Icon = "🕒", Group = NavigationGroup.SmartCollections, SmartCollection = SmartCollectionType.Recent, BadgeColor = "#3B82F6", Tooltip = "Recently Modified" },
             new() { Id = "Dls", Title = "Downloads", Icon = "📥", Group = NavigationGroup.SmartCollections, SmartCollection = SmartCollectionType.Downloads, BadgeColor = "#10B981", Tooltip = "Downloaded Files" }
-        };
+        ];
 
-        ToolsNavItems = new ObservableCollection<NavigationItemViewModel>
-        {
+        ToolsNavItems =
+        [
             new() { Id = "IdxMgr", Title = "Index Manager", Icon = "⚙", Group = NavigationGroup.Tools, Tooltip = "Index Database Manager" },
             new() { Id = "ScanFol", Title = "Scan Folder", Icon = "📂", Group = NavigationGroup.Tools, Tooltip = "Scan and Index Folder" },
             new() { Id = "Imp", Title = "Import", Icon = "📥", Group = NavigationGroup.Tools, Tooltip = "Import Index Data" },
             new() { Id = "Exp", Title = "Export", Icon = "📤", Group = NavigationGroup.Tools, Tooltip = "Export Library Data" }
-        };
+        ];
 
         SelectedNavItem = DashboardNavItem;
     }
@@ -247,6 +256,7 @@ public partial class MainWindowViewModel : ViewModelBase
         SelectedNavItem = item;
         ActiveSectionGroup = item.Group.ToString();
         BreadcrumbPath = $"{item.Group} › {item.Title}";
+        IsDashboardView = (item.Group == NavigationGroup.Dashboard);
 
         // Handle action mapping
         if (item.Group == NavigationGroup.Dashboard)
@@ -297,6 +307,29 @@ public partial class MainWindowViewModel : ViewModelBase
         _ = LoadFilesAsync();
     }
 
+    private void OnDashboardNavigate(string target)
+    {
+        if (target == "ScanFolder")
+        {
+            ToggleFolderManager();
+            return;
+        }
+        if (target == "NewWorkspace")
+        {
+            NewWorkspace();
+            return;
+        }
+
+        var navItem = LibraryNavItems.FirstOrDefault(n => n.Title.Equals(target, StringComparison.OrdinalIgnoreCase))
+            ?? SmartNavItems.FirstOrDefault(n => n.Title.Equals(target, StringComparison.OrdinalIgnoreCase))
+            ?? ToolsNavItems.FirstOrDefault(n => n.Title.Equals(target, StringComparison.OrdinalIgnoreCase));
+
+        if (navItem != null)
+        {
+            SelectNavigationItem(navItem);
+        }
+    }
+
     partial void OnSelectedWorkspaceChanged(Workspace? value)
     {
         _ = RefreshDataAsync();
@@ -304,6 +337,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     partial void OnSelectedCategoryChanged(CategoryItemViewModel? value)
     {
+        SelectedExtension = null;
         if (value != null)
         {
             foreach (var cat in Categories)
@@ -384,11 +418,10 @@ public partial class MainWindowViewModel : ViewModelBase
             }
         }
 
-        // Update extension chips
-        var extCounts = await _fileService.GetExtensionCountsAsync(wsId);
-        Extensions = new ObservableCollection<ExtensionItemViewModel>(
-            extCounts.Select(kvp => new ExtensionItemViewModel { Extension = kvp.Key, Count = kvp.Value })
-        );
+        if (DashboardVM != null)
+        {
+            _ = DashboardVM.RefreshDashboardAsync(wsId);
+        }
 
         await LoadFilesAsync();
     }
@@ -397,6 +430,34 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (_fileService == null) return;
 
+        // 1. Fetch category files to update extension filter chips for selected category
+        var categoryQuery = new FileSearchQuery
+        {
+            WorkspaceId = SelectedWorkspace?.Id,
+            Category = SelectedCategory?.Category ?? FileCategory.All,
+            SearchTerm = SearchText,
+            OnlyFavorites = OnlyFavorites,
+            Limit = 5000
+        };
+
+        var allCategoryFiles = await _fileService.QueryFilesAsync(categoryQuery);
+
+        var extGroups = allCategoryFiles
+            .Where(f => !string.IsNullOrWhiteSpace(f.Extension))
+            .GroupBy(f => f.Extension.TrimStart('.').ToLowerInvariant())
+            .OrderByDescending(g => g.Count())
+            .Take(30);
+
+        Extensions = new ObservableCollection<ExtensionItemViewModel>(
+            extGroups.Select(g => new ExtensionItemViewModel
+            {
+                Extension = g.Key,
+                Count = g.Count(),
+                IsSelected = SelectedExtension != null && SelectedExtension.Extension.Equals(g.Key, StringComparison.OrdinalIgnoreCase)
+            })
+        );
+
+        // 2. Fetch specific file items matching category + extension filter
         var query = new FileSearchQuery
         {
             WorkspaceId = SelectedWorkspace?.Id,
@@ -482,13 +543,23 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private async Task CopyPath(FileItem? file)
+    {
+        var item = file ?? SelectedFile;
+        if (item == null || string.IsNullOrWhiteSpace(item.AbsolutePath)) return;
+
+        StatusMessage = $"Copied path: {item.AbsolutePath}";
+        await Task.CompletedTask;
+    }
+
+    [RelayCommand]
     private void OpenFolder(FileItem? file)
     {
         var item = file ?? SelectedFile;
         if (item == null || string.IsNullOrWhiteSpace(item.AbsolutePath)) return;
 
         string? dir = Path.GetDirectoryName(item.AbsolutePath);
-        if (Directory.Exists(dir))
+        if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
         {
             try
             {
@@ -501,6 +572,28 @@ public partial class MainWindowViewModel : ViewModelBase
             catch (Exception ex)
             {
                 StatusMessage = $"Cannot open directory: {ex.Message}";
+            }
+        }
+    }
+
+    [RelayCommand]
+    private async Task BrowseFolder()
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow != null)
+        {
+            var storageProvider = desktop.MainWindow.StorageProvider;
+            if (storageProvider.CanPickFolder)
+            {
+                var result = await storageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+                {
+                    Title = "Select Folder to Index",
+                    AllowMultiple = false
+                });
+
+                if (result.Count > 0)
+                {
+                    NewFolderPath = result[0].Path.LocalPath;
+                }
             }
         }
     }
@@ -638,7 +731,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void Quit()
+    private static void Quit()
     {
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

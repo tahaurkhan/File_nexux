@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FileNexus.Core/FileNexus.Core.csproj" />
+    <Project Path="src/FileNexus.Database/FileNexus.Database.csproj" />
+    <Project Path="src/FileNexus.Interop/FileNexus.Interop.csproj" />
+    <Project Path="src/FileNexus.Plugins/FileNexus.Plugins.csproj" />
+    <Project Path="src/FileNexus.Shared/FileNexus.Shared.csproj" />
+    <Project Path="src/FileNexus.UI/FileNexus.UI.csproj" />
+  </Folder>
+</Solution>

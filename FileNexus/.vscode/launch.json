@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch FileNexus UI",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/FileNexus.UI/bin/Debug/net10.0/FileNexus.UI",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/FileNexus.UI",
+      "stopAtEntry": false,
+      "console": "internalConsole"
+    }
+  ]
+}
