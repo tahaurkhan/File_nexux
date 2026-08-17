@@ -19,3 +19,4 @@
 /home/tahaur/Projects/FileNexus/src/FileNexus.Core/bin/Debug/net10.0/FileNexus.Shared.pdb
 /home/tahaur/Projects/FileNexus/src/FileNexus.Core/obj/Debug/net10.0/FileNexus.Core.csproj.AssemblyReference.cache
 /home/tahaur/Projects/FileNexus/src/FileNexus.Core/obj/Debug/net10.0/FileNexu.1BF3BF05.Up2Date
+/home/tahaur/Projects/FileNexus/src/FileNexus.Core/bin/Debug/net10.0/libfilenexus_engine.so

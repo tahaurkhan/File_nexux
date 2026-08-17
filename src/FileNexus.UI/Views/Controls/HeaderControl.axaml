@@ -7,32 +7,27 @@
              x:Class="FileNexus.UI.Views.Controls.HeaderControl"
              x:DataType="vm:MainWindowViewModel">
 
-    <Border Background="#0F172A" BorderBrush="#1E293B" BorderThickness="0,0,0,1" Padding="16,10">
+    <Border Background="{DynamicResource HeaderBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0,0,0,1" Padding="16,10">
         <Grid ColumnDefinitions="Auto, *, Auto">
             <!-- App Branding & Breadcrumb Navigation -->
             <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="14" VerticalAlignment="Center">
-                <!-- Sidebar Toggle Button (ChatGPT style) -->
+                <!-- Sidebar Toggle Button -->
                 <Button Command="{Binding ToggleSidebarCommand}" Classes="icon-btn" ToolTip.Tip="Toggle Sidebar (Ctrl+B)">
-                    <TextBlock Text="{Binding SidebarToggleIcon}" FontSize="15" Foreground="#CBD5E1"/>
+                    <TextBlock Text="{Binding SidebarToggleIcon}" FontSize="15" Foreground="{DynamicResource TextSecondaryBrush}"/>
                 </Button>
 
                 <!-- App Logo -->
-                <Border CornerRadius="10" Width="36" Height="36">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-                            <GradientStop Color="#6366F1" Offset="0"/>
-                            <GradientStop Color="#3B82F6" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
-                    <TextBlock Text="⚡" Foreground="White" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border CornerRadius="10" Width="36" Height="36" ClipToBounds="True"
+                        ToolTip.Tip="FileNexus v0.1.0">
+                    <Image Source="avares://FileNexus.UI/Assets/app_logo.png" Stretch="Uniform"/>
                 </Border>
 
                 <!-- Current Section & Breadcrumbs -->
                 <StackPanel VerticalAlignment="Center" Spacing="2">
                     <StackPanel Orientation="Horizontal" Spacing="6">
-                        <TextBlock Text="FileNexus" Foreground="White" FontWeight="Bold" FontSize="15"/>
-                        <TextBlock Text="/" Foreground="#475569" FontSize="14" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding ActiveSectionGroup}" Foreground="#94A3B8" FontSize="13" FontWeight="Medium"/>
+                        <TextBlock Text="FileNexus" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Bold" FontSize="15"/>
+                        <TextBlock Text="/" Foreground="{DynamicResource TextMutedBrush}" FontSize="14" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding ActiveSectionGroup}" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" FontWeight="Medium"/>
                     </StackPanel>
                     
                     <StackPanel Orientation="Horizontal" Spacing="4">
@@ -41,60 +36,52 @@
                 </StackPanel>
             </StackPanel>
 
-            <!-- Global Search Bar (Raycast / ChatGPT Desktop Style) -->
+            <!-- Global Search Bar -->
             <Border Grid.Column="1" HorizontalAlignment="Center" Width="480" Height="42" 
-                    Background="#1E293B" CornerRadius="21" BorderBrush="#334155" BorderThickness="1" Padding="14,0">
+                    Background="{DynamicResource SearchBackgroundBrush}" CornerRadius="21" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="14,0">
                 <Grid ColumnDefinitions="Auto, *, Auto, Auto">
                     <!-- Search Icon -->
-                    <TextBlock Grid.Column="0" Text="🔍" Foreground="#64748B" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <PathIcon Grid.Column="0" Data="{StaticResource FlaticonSearch}" Foreground="{DynamicResource TextMutedBrush}" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
 
                     <!-- Search Input Box -->
                     <TextBox x:Name="SearchInput" Grid.Column="1" Text="{Binding SearchText, Mode=TwoWay}" 
-                             PlaceholderText="Search files... (try: ext:pdf, type:image, size>100MB, favorite:true)" 
-                             Background="Transparent" BorderThickness="0" Foreground="White" 
+                             PlaceholderText="Search files... (e.g. report.pdf, ext:png, favorite:true)" 
+                             Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimaryBrush}" 
                              VerticalAlignment="Center" FontSize="13"/>
 
                     <!-- Clear Search Button -->
                     <Button Grid.Column="2" Command="{Binding ClearSearchCommand}" 
                             IsVisible="{Binding SearchText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                             Background="Transparent" Padding="4" Margin="4,0" ToolTip.Tip="Clear search">
-                        <TextBlock Text="✕" Foreground="#94A3B8" FontSize="12"/>
+                        <TextBlock Text="✕" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12"/>
                     </Button>
 
                     <!-- Keyboard Shortcut Badge (Ctrl+K) -->
-                    <Border Grid.Column="3" Background="#0F172A" CornerRadius="4" Padding="6,3" VerticalAlignment="Center">
-                        <TextBlock Text="Ctrl K" Foreground="#64748B" FontSize="10" FontWeight="SemiBold"/>
+                    <Border Grid.Column="3" Background="{DynamicResource BadgeBackgroundBrush}" CornerRadius="4" Padding="6,3" VerticalAlignment="Center">
+                        <TextBlock Text="Ctrl K" Foreground="{DynamicResource TextMutedBrush}" FontSize="10" FontWeight="SemiBold"/>
                     </Border>
                 </Grid>
             </Border>
 
-            <!-- Action Controls (Theme, Notifications, Workspace Status & User Profile) -->
+            <!-- Action Controls (Theme Toggle, Settings) -->
             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
                 <!-- Indexed Count Pill -->
-                <Border Background="#1E1B4B" BorderBrush="#312E81" BorderThickness="1" CornerRadius="14" Padding="10,5">
+                <Border Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" CornerRadius="14" Padding="10,5">
                     <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-                        <TextBlock Text="💎" FontSize="11"/>
-                        <TextBlock Text="{Binding TotalFileCount, StringFormat='{}{0:N0} Files'}" Foreground="#A5B4FC" FontSize="11" FontWeight="Bold"/>
+                        <PathIcon Data="{StaticResource FlaticonDatabase}" Foreground="#A5B4FC" Width="12" Height="12" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding TotalFileCount, StringFormat='{}{0:N0} Files'}" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="11" FontWeight="Bold"/>
                     </StackPanel>
                 </Border>
 
-                <!-- Theme Toggle Button -->
-                <Button Command="{Binding ToggleThemeCommand}" Classes="icon-btn" ToolTip.Tip="Toggle Theme (Dark/Light)">
+                <!-- Theme Toggle Button (Cycles System, Light, Dark) -->
+                <Button Command="{Binding ToggleThemeCommand}" Classes="icon-btn" ToolTip.Tip="Appearance Theme (System / Light / Dark)">
                     <TextBlock Text="{Binding ThemeIcon}" FontSize="15"/>
                 </Button>
 
-                <!-- Notification Bell Button -->
-                <Button Classes="icon-btn" ToolTip.Tip="Notifications">
-                    <Grid>
-                        <TextBlock Text="🔔" FontSize="15"/>
-                        <Ellipse Width="6" Height="6" Fill="#EF4444" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-1,-1,0"/>
-                    </Grid>
-                </Button>
-
-                <!-- Profile / Settings Avatar Button -->
-                <Button Command="{Binding OpenSettingsCommand}" Classes="icon-btn" ToolTip.Tip="Profile &amp; Settings">
-                    <Border CornerRadius="12" Background="#334155" Width="26" Height="26">
-                        <TextBlock Text="👤" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <!-- Settings Button -->
+                <Button Command="{Binding OpenSettingsCommand}" Classes="icon-btn" ToolTip.Tip="Settings">
+                    <Border CornerRadius="12" Background="{DynamicResource CardBackgroundBrush}" Width="26" Height="26">
+                        <PathIcon Data="{StaticResource FlaticonSettings}" Foreground="{DynamicResource TextSecondaryBrush}" Width="14" Height="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                 </Button>
             </StackPanel>

@@ -1,20 +1,10 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Design.PreviewWith>
-        <Border Padding="20" Background="#0F172A">
-            <!-- Preview controls -->
-            <StackPanel Spacing="10">
-                <Button Classes="nav-item active" Content="Documents"/>
-                <Button Classes="nav-item" Content="Images"/>
-                <Button Classes="quick-action" Content="Scan Folder"/>
-            </StackPanel>
-        </Border>
-    </Design.PreviewWith>
 
     <!-- Navigation Item Button Style -->
     <Style Selector="Button.nav-item">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="#94A3B8"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Padding" Value="10,8"/>
         <Setter Property="Margin" Value="0,1"/>
@@ -30,8 +20,8 @@
     </Style>
 
     <Style Selector="Button.nav-item:pointerover">
-        <Setter Property="Background" Value="#1E293B"/>
-        <Setter Property="Foreground" Value="#F8FAFC"/>
+        <Setter Property="Background" Value="{DynamicResource CardHoverBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
     </Style>
 
     <Style Selector="Button.nav-item.active">
@@ -46,9 +36,9 @@
 
     <!-- Quick Action Button Style -->
     <Style Selector="Button.quick-action">
-        <Setter Property="Background" Value="#1E293B"/>
-        <Setter Property="Foreground" Value="#E2E8F0"/>
-        <Setter Property="BorderBrush" Value="#334155"/>
+        <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Padding" Value="12,7"/>
@@ -64,9 +54,9 @@
     </Style>
 
     <Style Selector="Button.quick-action:pointerover">
-        <Setter Property="Background" Value="#334155"/>
-        <Setter Property="BorderBrush" Value="#475569"/>
-        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="Background" Value="{DynamicResource CardHoverBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
         <Setter Property="RenderTransform" Value="scale(1.02)"/>
     </Style>
 
@@ -98,7 +88,7 @@
     <!-- Icon Button Style (Theme toggle, notifications, profile, collapse) -->
     <Style Selector="Button.icon-btn">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="#94A3B8"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Padding" Value="8"/>
         <Setter Property="Width" Value="34"/>
@@ -114,15 +104,15 @@
     </Style>
 
     <Style Selector="Button.icon-btn:pointerover">
-        <Setter Property="Background" Value="#334155"/>
-        <Setter Property="Foreground" Value="#F8FAFC"/>
+        <Setter Property="Background" Value="{DynamicResource CardHoverBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
     </Style>
 
     <!-- Extension Filter Chip Button -->
     <Style Selector="Button.ext-chip">
-        <Setter Property="Background" Value="#1E293B"/>
-        <Setter Property="Foreground" Value="#94A3B8"/>
-        <Setter Property="BorderBrush" Value="#334155"/>
+        <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="14"/>
         <Setter Property="Padding" Value="10,4"/>
@@ -139,9 +129,9 @@
     </Style>
 
     <Style Selector="Button.ext-chip:pointerover">
-        <Setter Property="Background" Value="#334155"/>
-        <Setter Property="Foreground" Value="#F8FAFC"/>
-        <Setter Property="BorderBrush" Value="#475569"/>
+        <Setter Property="Background" Value="{DynamicResource CardHoverBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}"/>
     </Style>
 
     <Style Selector="Button.ext-chip.active">
@@ -153,18 +143,18 @@
 
     <!-- Native Desktop Menu Styling -->
     <Style Selector="Menu">
-        <Setter Property="Background" Value="#0F172A"/>
-        <Setter Property="Foreground" Value="#CBD5E1"/>
+        <Setter Property="Background" Value="{DynamicResource HeaderBackgroundBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
     </Style>
 
     <Style Selector="MenuItem">
-        <Setter Property="Foreground" Value="#CBD5E1"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Padding" Value="10,5"/>
     </Style>
 
     <Style Selector="MenuItem:pointerover">
-        <Setter Property="Background" Value="#334155"/>
-        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="Background" Value="{DynamicResource CardHoverBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
     </Style>
 </Styles>

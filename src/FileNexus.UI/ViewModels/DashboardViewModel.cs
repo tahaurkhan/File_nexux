@@ -55,9 +55,6 @@ public partial class DashboardViewModel : ViewModelBase
     [ObservableProperty]
     public partial StorageAnalyticsViewModel StorageAnalytics { get; set; } = new();
 
-    [ObservableProperty]
-    public partial DuplicateSummaryViewModel DuplicateSummary { get; set; } = new();
-
     public DashboardViewModel()
     {
         // Design-Time Constructor with mock visual data
@@ -124,13 +121,6 @@ public partial class DashboardViewModel : ViewModelBase
         // Calculate statistics cards
         int categoryCount = catCounts.Count(c => c.Value > 0);
         int extensionCount = extCounts.Count;
-        var duplicateFiles = allFiles.Where(f => !string.IsNullOrEmpty(f.FileHash))
-            .GroupBy(f => f.FileHash)
-            .Where(g => g.Count() > 1)
-            .SelectMany(g => g.Skip(1))
-            .ToList();
-
-        long duplicateBytes = duplicateFiles.Sum(f => f.Size);
         int indexedFoldersCount = allFiles.Select(f => Path.GetDirectoryName(f.AbsolutePath)).Distinct().Count();
         int recentChangesCount = allFiles.Count(f => f.ModifiedAt >= DateTime.Now.AddDays(-7));
 
@@ -140,7 +130,6 @@ public partial class DashboardViewModel : ViewModelBase
             new StatisticCardViewModel { Title = "Indexed Storage", Value = TotalStorageFormatted, Subtitle = "Disk space indexed", Icon = "💾", BadgeColor = "#3B82F6", TrendText = "📊 Active", IsPositiveTrend = true },
             new StatisticCardViewModel { Title = "Categories", Value = categoryCount.ToString(), Subtitle = "Active file types", Icon = "🏷️", BadgeColor = "#10B981", TrendText = $"{categoryCount} categories", IsPositiveTrend = true },
             new StatisticCardViewModel { Title = "Extensions", Value = extensionCount.ToString(), Subtitle = "Unique formats", Icon = "🧩", BadgeColor = "#06B6D4", TrendText = "Formats mapped", IsPositiveTrend = true },
-            new StatisticCardViewModel { Title = "Duplicates", Value = duplicateFiles.Count.ToString(), Subtitle = FormatSize(duplicateBytes) + " duplicate", Icon = "🗑️", BadgeColor = "#EF4444", TrendText = "Savings potential", IsPositiveTrend = false },
             new StatisticCardViewModel { Title = "Indexed Folders", Value = indexedFoldersCount.ToString(), Subtitle = "Root locations", Icon = "📁", BadgeColor = "#8B5CF6", TrendText = "Directories scanned", IsPositiveTrend = true },
             new StatisticCardViewModel { Title = "Recent Changes", Value = recentChangesCount.ToString(), Subtitle = "Updated this week", Icon = "🕒", BadgeColor = "#F59E0B", TrendText = "7 days active", IsPositiveTrend = true }
         ];
@@ -245,15 +234,6 @@ public partial class DashboardViewModel : ViewModelBase
             });
         }
         StorageAnalytics = storageVM;
-
-        // Duplicate Summary
-        DuplicateSummary = new DuplicateSummaryViewModel
-        {
-            GroupCount = allFiles.Where(f => !string.IsNullOrEmpty(f.FileHash)).GroupBy(f => f.FileHash).Count(g => g.Count() > 1),
-            TotalDuplicateCount = duplicateFiles.Count,
-            DuplicateStorageFormatted = FormatSize(duplicateBytes),
-            PotentialSavingsFormatted = FormatSize(duplicateBytes)
-        };
     }
 
     private void LoadDesignTimeData()
@@ -268,7 +248,6 @@ public partial class DashboardViewModel : ViewModelBase
             new StatisticCardViewModel { Title = "Indexed Storage", Value = "184.2 GB", Subtitle = "Disk space indexed", Icon = "💾", BadgeColor = "#3B82F6", TrendText = "📊 Active", IsPositiveTrend = true },
             new StatisticCardViewModel { Title = "Categories", Value = "8", Subtitle = "Active file types", Icon = "🏷️", BadgeColor = "#10B981", TrendText = "8 categories", IsPositiveTrend = true },
             new StatisticCardViewModel { Title = "Extensions", Value = "42", Subtitle = "Unique formats", Icon = "🧩", BadgeColor = "#06B6D4", TrendText = "Formats mapped", IsPositiveTrend = true },
-            new StatisticCardViewModel { Title = "Duplicates", Value = "128", Subtitle = "1.4 GB duplicate", Icon = "🗑️", BadgeColor = "#EF4444", TrendText = "Savings potential", IsPositiveTrend = false },
             new StatisticCardViewModel { Title = "Indexed Folders", Value = "14", Subtitle = "Root locations", Icon = "📁", BadgeColor = "#8B5CF6", TrendText = "Directories scanned", IsPositiveTrend = true },
             new StatisticCardViewModel { Title = "Recent Changes", Value = "254", Subtitle = "Updated this week", Icon = "🕒", BadgeColor = "#F59E0B", TrendText = "7 days active", IsPositiveTrend = true }
         ];
@@ -327,14 +306,6 @@ public partial class DashboardViewModel : ViewModelBase
             ]
         };
         StorageAnalytics = storageVM;
-
-        DuplicateSummary = new DuplicateSummaryViewModel
-        {
-            GroupCount = 24,
-            TotalDuplicateCount = 128,
-            DuplicateStorageFormatted = "1.4 GB",
-            PotentialSavingsFormatted = "1.4 GB"
-        };
     }
 
     private static string FormatSize(long bytes)
@@ -361,37 +332,14 @@ public partial class DashboardViewModel : ViewModelBase
     private void OpenFile(FileItem? file)
     {
         if (file == null || string.IsNullOrWhiteSpace(file.AbsolutePath)) return;
-        if (File.Exists(file.AbsolutePath))
-        {
-            try
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = file.AbsolutePath,
-                    UseShellExecute = true
-                });
-            }
-            catch { }
-        }
+        Services.FileLauncher.OpenFile(file.AbsolutePath);
     }
 
     [RelayCommand]
     private void RevealFile(FileItem? file)
     {
         if (file == null || string.IsNullOrWhiteSpace(file.AbsolutePath)) return;
-        string? dir = Path.GetDirectoryName(file.AbsolutePath);
-        if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
-        {
-            try
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = dir,
-                    UseShellExecute = true
-                });
-            }
-            catch { }
-        }
+        Services.FileLauncher.OpenFolder(file.AbsolutePath);
     }
 
     [RelayCommand]
@@ -400,12 +348,6 @@ public partial class DashboardViewModel : ViewModelBase
         if (file == null || _fileService == null) return;
         file.IsFavorite = !file.IsFavorite;
         await _fileService.ToggleFavoriteAsync(file.Id, file.IsFavorite);
-    }
-
-    [RelayCommand]
-    private void OpenDuplicates()
-    {
-        _onNavigateSection?.Invoke("Duplicates");
     }
 
     [RelayCommand]

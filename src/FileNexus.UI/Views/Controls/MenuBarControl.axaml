@@ -7,7 +7,7 @@
              x:Class="FileNexus.UI.Views.Controls.MenuBarControl"
              x:DataType="vm:MainWindowViewModel">
 
-    <Border Background="#0B0F19" BorderBrush="#1E293B" BorderThickness="0,0,0,1" Padding="6,1">
+    <Border Background="{DynamicResource HeaderBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0,0,0,1" Padding="6,1">
         <Grid ColumnDefinitions="Auto, *, Auto">
             <!-- Main Desktop Window Menu -->
             <Menu Grid.Column="0" Height="26" VerticalAlignment="Center">
@@ -37,7 +37,11 @@
                     <MenuItem Header="Toggle Sidebar" InputGesture="Ctrl+B" Command="{Binding ToggleSidebarCommand}"/>
                     <MenuItem Header="Refresh" InputGesture="F5" Command="{Binding RefreshDataCommand}"/>
                     <Separator/>
-                    <MenuItem Header="Toggle Theme (Dark/Light)" Command="{Binding ToggleThemeCommand}"/>
+                    <MenuItem Header="Appearance Theme">
+                        <MenuItem Header="System Theme" Command="{Binding SetSystemThemeCommand}"/>
+                        <MenuItem Header="Light Theme" Command="{Binding SetLightThemeCommand}"/>
+                        <MenuItem Header="Dark Theme" Command="{Binding SetDarkThemeCommand}"/>
+                    </MenuItem>
                 </MenuItem>
 
                 <MenuItem Header="_Search">
@@ -53,7 +57,6 @@
                 </MenuItem>
 
                 <MenuItem Header="_Tools">
-                    <MenuItem Header="Find Duplicates" Command="{Binding OpenDuplicatesCommand}"/>
                     <MenuItem Header="Recent Files" Command="{Binding OpenRecentCommand}"/>
                     <Separator/>
                     <MenuItem Header="Settings" InputGesture="Ctrl+P" Command="{Binding OpenSettingsCommand}"/>
@@ -62,7 +65,6 @@
                 <MenuItem Header="_Help">
                     <MenuItem Header="Documentation"/>
                     <MenuItem Header="Keyboard Shortcuts" InputGesture="F1"/>
-                    <MenuItem Header="Check for Updates..."/>
                     <Separator/>
                     <MenuItem Header="About FileNexus" Command="{Binding OpenAboutCommand}"/>
                 </MenuItem>
@@ -70,12 +72,10 @@
 
             <!-- Window Status Indicator (Right aligned) -->
             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Margin="0,0,8,0">
-                <Border Background="#1E293B" CornerRadius="4" Padding="6,2">
-                    <TextBlock Text="VIRTUAL LIBRARY v0.1.0" Foreground="#64748B" FontSize="10" FontWeight="SemiBold"/>
+                <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="4" Padding="6,2">
+                    <TextBlock Text="VIRTUAL LIBRARY v0.1.0" Foreground="{DynamicResource TextMutedBrush}" FontSize="10" FontWeight="SemiBold"/>
                 </Border>
             </StackPanel>
         </Grid>
     </Border>
 </UserControl>
-
-

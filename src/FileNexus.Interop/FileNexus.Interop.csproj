@@ -11,4 +11,11 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\..\native\filenexus_engine\target\release\libfilenexus_engine.so" Condition="Exists('$(MSBuildThisFileDirectory)..\..\native\filenexus_engine\target\release\libfilenexus_engine.so')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>libfilenexus_engine.so</Link>
+    </None>
+  </ItemGroup>
+
 </Project>

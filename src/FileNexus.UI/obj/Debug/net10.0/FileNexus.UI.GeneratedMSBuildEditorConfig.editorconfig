@@ -37,13 +37,13 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/tahaur/Projects/FileNexus/src/FileNexus.UI/Styles/DashboardStyles.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/tahaur/Projects/FileNexus/src/FileNexus.UI/Styles/FlaticonIcons.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/tahaur/Projects/FileNexus/src/FileNexus.UI/Styles/NavigationStyles.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/home/tahaur/Projects/FileNexus/src/FileNexus.UI/Views/Controls/CategoryCardControl.axaml]
-build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
-
-[/home/tahaur/Projects/FileNexus/src/FileNexus.UI/Views/Controls/DuplicateSummaryControl.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/home/tahaur/Projects/FileNexus/src/FileNexus.UI/Views/Controls/EmptyStateControl.axaml]
@@ -81,3 +81,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/home/tahaur/Projects/FileNexus/src/FileNexus.UI/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/tahaur/Projects/FileNexus/src/FileNexus.UI/Views/SplashWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/tahaur/Projects/FileNexus/src/FileNexus.UI/Assets/app_logo.png]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaResource
