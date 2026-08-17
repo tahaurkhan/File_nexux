@@ -2,13 +2,60 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="FileNexus.UI.App"
              xmlns:local="using:FileNexus.UI"
-             RequestedThemeVariant="Dark">
-             <!-- Set Dark theme variant by default for rich modern desktop aesthetics -->
+             RequestedThemeVariant="Default">
 
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
   
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://FileNexus.UI/Styles/FlaticonIcons.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#F1F5F9"/>
+                    <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="HeaderBackgroundBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="CardHoverBrush" Color="#F8FAFC"/>
+                    <SolidColorBrush x:Key="CardBorderBrush" Color="#E2E8F0"/>
+                    <SolidColorBrush x:Key="SubtleBorderBrush" Color="#E2E8F0"/>
+                    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#0F172A"/>
+                    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#475569"/>
+                    <SolidColorBrush x:Key="TextMutedBrush" Color="#64748B"/>
+                    <SolidColorBrush x:Key="SearchBackgroundBrush" Color="#F1F5F9"/>
+                    <SolidColorBrush x:Key="PanelBackgroundBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="BadgeBackgroundBrush" Color="#F1F5F9"/>
+                    <SolidColorBrush x:Key="NavHoverBrush" Color="#F1F5F9"/>
+                    <SolidColorBrush x:Key="ToolbarBackgroundBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="ModalBackgroundBrush" Color="#FFFFFF"/>
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#0B0F19"/>
+                    <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#0F172A"/>
+                    <SolidColorBrush x:Key="HeaderBackgroundBrush" Color="#0F172A"/>
+                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#1E293B"/>
+                    <SolidColorBrush x:Key="CardHoverBrush" Color="#26334D"/>
+                    <SolidColorBrush x:Key="CardBorderBrush" Color="#334155"/>
+                    <SolidColorBrush x:Key="SubtleBorderBrush" Color="#1E293B"/>
+                    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#94A3B8"/>
+                    <SolidColorBrush x:Key="TextMutedBrush" Color="#64748B"/>
+                    <SolidColorBrush x:Key="SearchBackgroundBrush" Color="#1E293B"/>
+                    <SolidColorBrush x:Key="PanelBackgroundBrush" Color="#0F172A"/>
+                    <SolidColorBrush x:Key="BadgeBackgroundBrush" Color="#0F172A"/>
+                    <SolidColorBrush x:Key="NavHoverBrush" Color="#1E293B"/>
+                    <SolidColorBrush x:Key="ToolbarBackgroundBrush" Color="#0B0F19"/>
+                    <SolidColorBrush x:Key="ModalBackgroundBrush" Color="#1E293B"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://FileNexus.UI/Styles/NavigationStyles.axaml"/>

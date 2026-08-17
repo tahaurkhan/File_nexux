@@ -12,7 +12,7 @@
         Title="FileNexus — Modern Virtual File Library"
         Width="1380" Height="860"
         WindowStartupLocation="CenterScreen"
-        Background="#0B0F19">
+        Background="{DynamicResource AppBackgroundBrush}">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -43,10 +43,10 @@
             <!-- B. CENTER CONTENT AREA -->
             <Grid Grid.Column="1" RowDefinitions="Auto, *">
                 <!-- Folder Manager Drawer Modal -->
-                <Border Grid.Row="0" IsVisible="{Binding IsFolderManagerOpen}" Background="#1E293B" BorderBrush="#334155" BorderThickness="0,0,0,1" Padding="16">
+                <Border Grid.Row="0" IsVisible="{Binding IsFolderManagerOpen}" Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0,0,0,1" Padding="16">
                     <Grid ColumnDefinitions="*, Auto, Auto, Auto">
                         <TextBox Grid.Column="0" Text="{Binding NewFolderPath, Mode=TwoWay}" PlaceholderText="Enter or browse folder path to index (e.g., /home/user/Downloads or C:\Documents)..." 
-                                 Background="#0F172A" Foreground="White" BorderBrush="#334155" CornerRadius="6" Padding="10,8" Margin="0,0,8,0"/>
+                                 Background="{DynamicResource SearchBackgroundBrush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderBrush="{DynamicResource CardBorderBrush}" CornerRadius="6" Padding="10,8" Margin="0,0,8,0"/>
                         <Button Grid.Column="1" Command="{Binding BrowseFolderCommand}" Background="#3B82F6" Foreground="White" CornerRadius="6" Padding="12,8" Margin="0,0,8,0" ToolTip.Tip="Browse Folder System">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <TextBlock Text="📂" FontSize="13"/>
@@ -56,7 +56,7 @@
                         <Button Grid.Column="2" Command="{Binding AddWorkspaceFolderCommand}" Background="#10B981" Foreground="White" CornerRadius="6" Padding="14,8" Margin="0,0,8,0">
                             <TextBlock Text="Start Indexing"/>
                         </Button>
-                        <Button Grid.Column="3" Command="{Binding ToggleFolderManagerCommand}" Background="#334155" Foreground="White" CornerRadius="6" Padding="10,8">
+                        <Button Grid.Column="3" Command="{Binding ToggleFolderManagerCommand}" Classes="dash-btn-secondary">
                             <TextBlock Text="Cancel"/>
                         </Button>
                     </Grid>
@@ -65,154 +65,243 @@
                 <!-- DASHBOARD VIEW (When IsDashboardView is true) -->
                 <views:DashboardView Grid.Row="1" DataContext="{Binding DashboardVM}" IsVisible="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).IsDashboardView}"/>
 
-                <!-- FILE COLLECTION LIST & DETAILS DRAWER (When IsDashboardView is false) -->
+                <!-- EAGLE-INSPIRED VISUAL FILE GRID & PREVIEW PANEL (When IsDashboardView is false) -->
                 <Grid Grid.Row="1" RowDefinitions="Auto, *" IsVisible="{Binding !IsDashboardView}">
                     <!-- SECONDARY EXTENSION FILTER PANEL -->
                     <controls:ExtensionPanelControl Grid.Row="0"/>
 
-                    <!-- MAIN FILE VIRTUAL COLLECTION LIST & DETAILS DRAWER -->
+                    <!-- MAIN VISUAL ASSET GRID & PREVIEW PANEL -->
                     <Grid Grid.Row="1" ColumnDefinitions="*, 320">
-                    <!-- File Records List -->
-                    <ListBox Grid.Column="0" ItemsSource="{Binding Files}" SelectedItem="{Binding SelectedFile}" SelectionMode="Multiple" Background="Transparent" Padding="12">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate x:DataType="models:FileItem">
-                                <Border Background="#1E293B" CornerRadius="8" Padding="14,11" Margin="0,3" BorderBrush="#334155" BorderThickness="1">
-                                    <Border.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Header="Open File" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenFileCommand}" CommandParameter="{Binding}">
-                                                <MenuItem.Icon>
-                                                    <TextBlock Text="📄"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            <MenuItem Header="Reveal in Folder" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenFolderCommand}" CommandParameter="{Binding}">
-                                                <MenuItem.Icon>
-                                                    <TextBlock Text="📁"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            <MenuItem Header="Copy Absolute Path" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).CopyPathCommand}" CommandParameter="{Binding}">
-                                                <MenuItem.Icon>
-                                                    <TextBlock Text="📋"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            <Separator/>
-                                            <MenuItem Header="Toggle Favorite" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ToggleFavoriteCommand}" CommandParameter="{Binding}">
-                                                <MenuItem.Icon>
-                                                    <TextBlock Text="⭐"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                        </ContextMenu>
-                                    </Border.ContextMenu>
-                                    <Grid ColumnDefinitions="Auto, *, Auto, Auto">
-                                        <!-- Extension Badge -->
-                                        <Border Grid.Column="0" Background="#0F172A" CornerRadius="6" Padding="10,5" VerticalAlignment="Center" Margin="0,0,14,0">
-                                            <TextBlock Text="{Binding Extension, StringFormat='.{0}'}" Foreground="#38BDF8" FontWeight="Bold" FontSize="11"/>
+                        <!-- Visual Card Grid -->
+                        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="12">
+                            <ListBox ItemsSource="{Binding FileViewModels}" SelectedItem="{Binding SelectedFileViewModel}" 
+                                     DoubleTapped="OnFileDoubleTapped" SelectionMode="Single" Background="Transparent">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:FileItemViewModel">
+                                        <Border Width="195" Height="215" Margin="6" 
+                                                Background="{DynamicResource CardBackgroundBrush}" 
+                                                BorderBrush="{DynamicResource CardBorderBrush}" 
+                                                BorderThickness="1" CornerRadius="10" Padding="8">
+                                            <Border.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Open (Default App)" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenFileCommand}" CommandParameter="{Binding}">
+                                                        <MenuItem.Icon>
+                                                            <TextBlock Text="📄"/>
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                    <MenuItem Header="Reveal in Folder" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).OpenFolderCommand}" CommandParameter="{Binding}">
+                                                        <MenuItem.Icon>
+                                                            <TextBlock Text="📁"/>
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                    <MenuItem Header="Copy Path" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).CopyPathCommand}" CommandParameter="{Binding Item}">
+                                                        <MenuItem.Icon>
+                                                            <TextBlock Text="📋"/>
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                    <Separator/>
+                                                    <MenuItem Header="Toggle Favorite" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ToggleFavoriteCommand}" CommandParameter="{Binding Item}">
+                                                        <MenuItem.Icon>
+                                                            <TextBlock Text="⭐"/>
+                                                        </MenuItem.Icon>
+                                                    </MenuItem>
+                                                </ContextMenu>
+                                            </Border.ContextMenu>
+
+                                            <Grid RowDefinitions="*, Auto">
+                                                <!-- Thumbnail / File Type Card Visual -->
+                                                <Border Grid.Row="0" Background="{DynamicResource BadgeBackgroundBrush}" 
+                                                        CornerRadius="8" ClipToBounds="True" Margin="0,0,0,8">
+                                                    <Panel>
+                                                        <!-- Real Image Thumbnail for images -->
+                                                        <Image Source="{Binding Thumbnail}" Stretch="Uniform" 
+                                                               IsVisible="{Binding Thumbnail, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+
+                                                        <!-- Vector Icon & Extension Badge fallback for non-images -->
+                                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6"
+                                                                    IsVisible="{Binding Thumbnail, Converter={x:Static ObjectConverters.IsNull}}">
+                                                            <TextBlock Text="{Binding Icon}" FontSize="36" HorizontalAlignment="Center"/>
+                                                            <Border Background="{Binding BadgeColor}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Center">
+                                                                <TextBlock Text="{Binding UpperExtension}" Foreground="White" FontWeight="Bold" FontSize="10"/>
+                                                            </Border>
+                                                        </StackPanel>
+                                                    </Panel>
+                                                </Border>
+
+                                                <!-- File Information Card Footer -->
+                                                <Grid Grid.Row="1" ColumnDefinitions="*, Auto">
+                                                    <StackPanel Grid.Column="0" Spacing="2">
+                                                        <TextBlock Text="{Binding Name}" Foreground="{DynamicResource TextPrimaryBrush}" 
+                                                                   FontWeight="SemiBold" FontSize="12" TextTrimming="CharacterEllipsis" 
+                                                                   ToolTip.Tip="{Binding Name}"/>
+                                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                                            <TextBlock Text="{Binding UpperExtension}" Foreground="{Binding BadgeColor}" FontWeight="Bold" FontSize="11"/>
+                                                            <TextBlock Text="•" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
+                                                            <TextBlock Text="{Binding FormattedSize}" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="11"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+
+                                                    <Button Grid.Column="1" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ToggleFavoriteCommand}" CommandParameter="{Binding Item}"
+                                                            Background="Transparent" Padding="4" VerticalAlignment="Center" ToolTip.Tip="Favorite">
+                                                        <TextBlock Text="⭐" Opacity="{Binding IsFavorite}"/>
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
                                         </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ScrollViewer>
 
-                                        <!-- File Metadata -->
-                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="3">
-                                            <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="SemiBold" FontSize="14"/>
-                                            <TextBlock Text="{Binding AbsolutePath}" Foreground="#94A3B8" FontSize="11" TextTrimming="CharacterEllipsis"/>
+                        <!-- File Details & Metadata Drawer -->
+                        <Border Grid.Column="1" Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1,0,0,0" Padding="16">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" AllowAutoHide="True">
+                                <StackPanel Spacing="16" IsVisible="{Binding SelectedFileViewModel, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                    <TextBlock Text="ASSET PREVIEW" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" FontWeight="Bold"/>
+
+                                    <!-- Large Preview Card -->
+                                    <Border Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" CornerRadius="10" Padding="16" HorizontalAlignment="Stretch">
+                                        <StackPanel Spacing="12" HorizontalAlignment="Center">
+                                            <!-- Large Image Preview if image thumbnail loaded -->
+                                            <Border CornerRadius="8" ClipToBounds="True" MaxHeight="180" MaxWidth="260"
+                                                    IsVisible="{Binding SelectedFileViewModel.Thumbnail, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                                <Image Source="{Binding SelectedFileViewModel.Thumbnail}" Stretch="Uniform"/>
+                                            </Border>
+
+                                            <!-- Icon Fallback if non-image -->
+                                            <TextBlock Text="{Binding SelectedFileViewModel.Icon}" FontSize="54" HorizontalAlignment="Center"
+                                                       IsVisible="{Binding SelectedFileViewModel.Thumbnail, Converter={x:Static ObjectConverters.IsNull}}"/>
+
+                                            <TextBlock Text="{Binding SelectedFileViewModel.Name}" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Bold" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"/>
+
+                                            <Border Background="{Binding SelectedFileViewModel.BadgeColor}" CornerRadius="4" Padding="8,3" HorizontalAlignment="Center">
+                                                <TextBlock Text="{Binding SelectedFileViewModel.UpperExtension}" Foreground="White" FontWeight="Bold" FontSize="11"/>
+                                            </Border>
                                         </StackPanel>
+                                    </Border>
 
-                                        <!-- Size & Modified Date -->
-                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="16,0" Spacing="2">
-                                            <TextBlock Text="{Binding FormattedSize}" Foreground="#E2E8F0" FontSize="12" HorizontalAlignment="Right"/>
-                                            <TextBlock Text="{Binding ModifiedAt, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}" Foreground="#64748B" FontSize="11" HorizontalAlignment="Right"/>
-                                        </StackPanel>
-
-                                        <!-- Favorite Toggle Button -->
-                                        <Button Grid.Column="3" Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ToggleFavoriteCommand}" CommandParameter="{Binding}"
-                                                Background="Transparent" Padding="6" VerticalAlignment="Center">
-                                            <TextBlock Text="⭐" Opacity="{Binding IsFavorite}"/>
+                                    <!-- Open File, Open Folder & Copy Path Actions -->
+                                    <Grid ColumnDefinitions="*, *, *">
+                                        <Button Grid.Column="0" Command="{Binding OpenFileCommand}" CommandParameter="{Binding SelectedFileViewModel}" 
+                                                Classes="action-primary" Margin="0,0,2,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" ToolTip.Tip="Open in Default App (Double-Click)">
+                                            <TextBlock Text="Open" FontSize="11"/>
+                                        </Button>
+                                        <Button Grid.Column="1" Command="{Binding OpenFolderCommand}" CommandParameter="{Binding SelectedFileViewModel}" 
+                                                Classes="quick-action" Margin="2,0,2,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" ToolTip.Tip="Reveal in OS Folder">
+                                            <TextBlock Text="Folder" FontSize="11"/>
+                                        </Button>
+                                        <Button Grid.Column="2" Command="{Binding CopyPathCommand}" CommandParameter="{Binding SelectedFileViewModel.Item}" 
+                                                Classes="quick-action" Margin="2,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" ToolTip.Tip="Copy File Path">
+                                            <TextBlock Text="Copy" FontSize="11"/>
                                         </Button>
                                     </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
 
-                    <!-- File Details Drawer -->
-                    <Border Grid.Column="1" Background="#0F172A" BorderBrush="#1E293B" BorderThickness="1,0,0,0" Padding="16">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" AllowAutoHide="True">
-                            <StackPanel Spacing="16" IsVisible="{Binding SelectedFile, Converter={x:Static ObjectConverters.IsNotNull}}">
-                                <TextBlock Text="FILE DETAILS" Foreground="#64748B" FontSize="11" FontWeight="Bold"/>
+                                    <!-- Detailed Metadata Specs -->
+                                    <StackPanel Spacing="10">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Full Absolute Path" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
+                                            <SelectableTextBlock Text="{Binding SelectedFileViewModel.AbsolutePath}" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="12" TextWrapping="Wrap"/>
+                                        </StackPanel>
 
-                                <!-- Large Icon & File Name -->
-                                <Border Background="#1E293B" CornerRadius="10" Padding="18" HorizontalAlignment="Stretch">
-                                    <StackPanel Spacing="10" HorizontalAlignment="Center">
-                                        <TextBlock Text="📄" FontSize="44" HorizontalAlignment="Center"/>
-                                        <TextBlock Text="{Binding SelectedFile.Name}" Foreground="White" FontWeight="Bold" FontSize="14" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"/>
-                                        <Border Background="#38BDF8" CornerRadius="4" Padding="8,3" HorizontalAlignment="Center">
-                                            <TextBlock Text="{Binding SelectedFile.Extension, StringFormat='.{0}'}" Foreground="#0F172A" FontWeight="Bold" FontSize="11"/>
-                                        </Border>
-                                    </StackPanel>
-                                </Border>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="File Size" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
+                                            <TextBlock Text="{Binding SelectedFileViewModel.FormattedSize}" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="12" FontWeight="SemiBold"/>
+                                        </StackPanel>
 
-                                <!-- Open File, Open Folder & Copy Path Actions -->
-                                <Grid ColumnDefinitions="*, *, *">
-                                    <Button Grid.Column="0" Command="{Binding OpenFileCommand}" CommandParameter="{Binding SelectedFile}" 
-                                            Classes="action-primary" Margin="0,0,2,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" ToolTip.Tip="Open File">
-                                        <TextBlock Text="Open" FontSize="11"/>
-                                    </Button>
-                                    <Button Grid.Column="1" Command="{Binding OpenFolderCommand}" CommandParameter="{Binding SelectedFile}" 
-                                            Classes="quick-action" Margin="2,0,2,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" ToolTip.Tip="Reveal in Folder">
-                                        <TextBlock Text="Folder" FontSize="11"/>
-                                    </Button>
-                                    <Button Grid.Column="2" Command="{Binding CopyPathCommand}" CommandParameter="{Binding SelectedFile}" 
-                                            Classes="quick-action" Margin="2,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" ToolTip.Tip="Copy Path">
-                                        <TextBlock Text="Copy Path" FontSize="11"/>
-                                    </Button>
-                                </Grid>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Category" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
+                                            <TextBlock Text="{Binding SelectedFileViewModel.Category}" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="12"/>
+                                        </StackPanel>
 
-                                <!-- Detailed Metadata Specs -->
-                                <StackPanel Spacing="10">
-                                    <StackPanel Spacing="2">
-                                        <TextBlock Text="Full Absolute Path" Foreground="#64748B" FontSize="11"/>
-                                        <SelectableTextBlock Text="{Binding SelectedFile.AbsolutePath}" Foreground="#E2E8F0" FontSize="12" TextWrapping="Wrap"/>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Text="Last Modified" Foreground="{DynamicResource TextMutedBrush}" FontSize="11"/>
+                                            <TextBlock Text="{Binding SelectedFileViewModel.ModifiedAt, StringFormat='{}{0:f}'}" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="12"/>
+                                        </StackPanel>
                                     </StackPanel>
 
-                                    <StackPanel Spacing="2">
-                                        <TextBlock Text="File Size" Foreground="#64748B" FontSize="11"/>
-                                        <TextBlock Text="{Binding SelectedFile.FormattedSize}" Foreground="#E2E8F0" FontSize="12" FontWeight="SemiBold"/>
-                                    </StackPanel>
-
-                                    <StackPanel Spacing="2">
-                                        <TextBlock Text="Category" Foreground="#64748B" FontSize="11"/>
-                                        <TextBlock Text="{Binding SelectedFile.Category}" Foreground="#E2E8F0" FontSize="12"/>
-                                    </StackPanel>
-
-                                    <StackPanel Spacing="2">
-                                        <TextBlock Text="Last Modified" Foreground="#64748B" FontSize="11"/>
-                                        <TextBlock Text="{Binding SelectedFile.ModifiedAt, StringFormat='{}{0:f}'}" Foreground="#E2E8F0" FontSize="12"/>
+                                    <!-- Tags Metadata Editor -->
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Text="TAGS" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" FontWeight="Bold"/>
+                                        <TextBox Text="{Binding SelectedFileViewModel.Tags, Mode=TwoWay}" PlaceholderText="Add tags (comma separated)..." 
+                                                 Background="{DynamicResource SearchBackgroundBrush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderBrush="{DynamicResource CardBorderBrush}" CornerRadius="6" Padding="8"/>
+                                        <Button Command="{Binding SaveTagsCommand}" CommandParameter="{Binding SelectedFileViewModel.Tags}" 
+                                                Classes="quick-action" HorizontalAlignment="Right">
+                                            <TextBlock Text="Save Tags" FontSize="11"/>
+                                        </Button>
                                     </StackPanel>
                                 </StackPanel>
-
-                                <!-- Tags Metadata Editor -->
-                                <StackPanel Spacing="6">
-                                    <TextBlock Text="TAGS" Foreground="#64748B" FontSize="11" FontWeight="Bold"/>
-                                    <TextBox Text="{Binding SelectedFile.Tags, Mode=TwoWay}" PlaceholderText="Add tags (comma separated)..." 
-                                             Background="#1E293B" Foreground="White" BorderBrush="#334155" CornerRadius="6" Padding="8"/>
-                                    <Button Command="{Binding SaveTagsCommand}" CommandParameter="{Binding SelectedFile.Tags}" 
-                                            Classes="quick-action" HorizontalAlignment="Right">
-                                        <TextBlock Text="Save Tags" FontSize="11"/>
-                                    </Button>
-                                </StackPanel>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Border>
+                            </ScrollViewer>
+                        </Border>
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid>
-    </Grid>
 
-        <!-- 5. FOOTER STATUS BAR -->
-        <Border Grid.Row="4" Background="#0B0F19" BorderBrush="#1E293B" BorderThickness="0,1,0,0" Padding="16,6">
+        <!-- 5. SETTINGS DIALOG MODAL (APPEARANCE & THEME) -->
+        <Border Grid.Row="0" Grid.RowSpan="5" Background="#80000000" IsVisible="{Binding IsSettingsOpen}" ZIndex="999">
+            <Border Background="{DynamicResource ModalBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" 
+                    BorderThickness="1" CornerRadius="14" Padding="24" Width="440" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Spacing="18">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <StackPanel Grid.Column="0" Spacing="2">
+                            <TextBlock Text="Settings &amp; Preferences" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="18" FontWeight="Bold"/>
+                            <TextBlock Text="Configure appearance and application settings" Foreground="{DynamicResource TextMutedBrush}" FontSize="12"/>
+                        </StackPanel>
+                        <Button Grid.Column="1" Command="{Binding OpenSettingsCommand}" Classes="icon-btn" ToolTip.Tip="Close">
+                            <TextBlock Text="✕" FontSize="14"/>
+                        </Button>
+                    </Grid>
+
+                    <!-- Appearance Theme Section -->
+                    <Border Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" CornerRadius="10" Padding="16">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="APPEARANCE THEME" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" FontWeight="Bold"/>
+                            
+                            <Grid ColumnDefinitions="*, *, *">
+                                <Button Grid.Column="0" Command="{Binding SetSystemThemeCommand}" Classes="dash-btn-secondary" Margin="0,0,4,0" HorizontalAlignment="Stretch">
+                                    <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                                        <TextBlock Text="💻"/>
+                                        <TextBlock Text="System"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Grid.Column="1" Command="{Binding SetLightThemeCommand}" Classes="dash-btn-secondary" Margin="2,0,2,0" HorizontalAlignment="Stretch">
+                                    <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                                        <TextBlock Text="☀️"/>
+                                        <TextBlock Text="Light"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Grid.Column="2" Command="{Binding SetDarkThemeCommand}" Classes="dash-btn-secondary" Margin="4,0,0,0" HorizontalAlignment="Stretch">
+                                    <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                                        <TextBlock Text="🌙"/>
+                                        <TextBlock Text="Dark"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+
+                            <TextBlock Text="System theme automatically follows your OS preference." Foreground="{DynamicResource TextSecondaryBrush}" FontSize="11" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Command="{Binding OpenSettingsCommand}" Classes="action-primary" HorizontalAlignment="Right" Padding="20,8">
+                        <TextBlock Text="Done"/>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Border>
+
+        <!-- 6. FOOTER STATUS BAR -->
+        <Border Grid.Row="4" Background="{DynamicResource ToolbarBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0,1,0,0" Padding="16,6">
             <Grid ColumnDefinitions="*, Auto">
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
                     <TextBlock Text="●" Foreground="#10B981" VerticalAlignment="Center" FontSize="10"/>
-                    <TextBlock Text="{Binding StatusMessage}" Foreground="#94A3B8" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" VerticalAlignment="Center"/>
                 </StackPanel>
-                <TextBlock Grid.Column="1" Text="FileNexus — Virtual File Library" Foreground="#475569" FontSize="11" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="FileNexus — Virtual File Library" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" VerticalAlignment="Center"/>
             </Grid>
         </Border>
     </Grid>

@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.Input;
 using FileNexus.Core.Services;
 using FileNexus.Shared.Enums;
 using FileNexus.Shared.Models;
+using FileNexus.UI.Services;
 
 namespace FileNexus.UI.ViewModels;
 
@@ -39,10 +40,13 @@ public partial class MainWindowViewModel : ViewModelBase
     public partial string BreadcrumbPath { get; set; } = "Dashboard Overview";
 
     [ObservableProperty]
-    public partial bool IsDarkMode { get; set; } = true;
+    public partial string ThemeIcon { get; set; } = "💻";
 
     [ObservableProperty]
-    public partial string ThemeIcon { get; set; } = "🌙";
+    public partial ThemeOption CurrentThemeMode { get; set; } = ThemeOption.System;
+
+    [ObservableProperty]
+    public partial bool IsSettingsOpen { get; set; }
 
     // Navigation Hierarchy
     [ObservableProperty]
@@ -84,6 +88,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     public partial FileItem? SelectedFile { get; set; }
+
+    [ObservableProperty]
+    public partial ObservableCollection<FileItemViewModel> FileViewModels { get; set; } = [];
+
+    [ObservableProperty]
+    public partial FileItemViewModel? SelectedFileViewModel { get; set; }
 
     [ObservableProperty]
     public partial string SearchText { get; set; } = string.Empty;
@@ -176,7 +186,6 @@ public partial class MainWindowViewModel : ViewModelBase
         SmartNavItems =
         [
             new() { Id = "Fav", Title = "Favorites", Icon = "⭐", Group = NavigationGroup.SmartCollections, SmartCollection = SmartCollectionType.Favorites, BadgeColor = "#F59E0B", Tooltip = "Starred Favorites" },
-            new() { Id = "Dup", Title = "Duplicates", Icon = "🗑", Group = NavigationGroup.SmartCollections, SmartCollection = SmartCollectionType.Duplicates, BadgeColor = "#EF4444", Tooltip = "Duplicate Files" },
             new() { Id = "Rec", Title = "Recent", Icon = "🕒", Group = NavigationGroup.SmartCollections, SmartCollection = SmartCollectionType.Recent, BadgeColor = "#3B82F6", Tooltip = "Recently Modified" },
             new() { Id = "Dls", Title = "Downloads", Icon = "📥", Group = NavigationGroup.SmartCollections, SmartCollection = SmartCollectionType.Downloads, BadgeColor = "#10B981", Tooltip = "Downloaded Files" }
         ];
@@ -224,9 +233,44 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void ToggleTheme()
     {
-        IsDarkMode = !IsDarkMode;
-        ThemeIcon = IsDarkMode ? "🌙" : "☀️";
-        StatusMessage = IsDarkMode ? "Theme: Dark" : "Theme: Light";
+        var next = ThemeManager.CycleNextTheme();
+        CurrentThemeMode = next;
+        UpdateThemeState();
+    }
+
+    [RelayCommand]
+    private void SetSystemTheme()
+    {
+        ThemeManager.ApplyTheme(ThemeOption.System);
+        CurrentThemeMode = ThemeOption.System;
+        UpdateThemeState();
+    }
+
+    [RelayCommand]
+    private void SetLightTheme()
+    {
+        ThemeManager.ApplyTheme(ThemeOption.Light);
+        CurrentThemeMode = ThemeOption.Light;
+        UpdateThemeState();
+    }
+
+    [RelayCommand]
+    private void SetDarkTheme()
+    {
+        ThemeManager.ApplyTheme(ThemeOption.Dark);
+        CurrentThemeMode = ThemeOption.Dark;
+        UpdateThemeState();
+    }
+
+    private void UpdateThemeState()
+    {
+        ThemeIcon = CurrentThemeMode switch
+        {
+            ThemeOption.Light => "☀️",
+            ThemeOption.Dark => "🌙",
+            _ => "💻"
+        };
+        StatusMessage = $"Appearance: {CurrentThemeMode}";
     }
 
     [RelayCommand]
@@ -275,11 +319,6 @@ public partial class MainWindowViewModel : ViewModelBase
             if (item.SmartCollection == SmartCollectionType.Favorites)
             {
                 OnlyFavorites = true;
-            }
-            else if (item.SmartCollection == SmartCollectionType.Duplicates)
-            {
-                OnlyFavorites = false;
-                SearchText = "duplicate:true";
             }
             else if (item.SmartCollection == SmartCollectionType.Recent)
             {
@@ -470,6 +509,18 @@ public partial class MainWindowViewModel : ViewModelBase
 
         var list = await _fileService.QueryFilesAsync(query);
         Files = new ObservableCollection<FileItem>(list);
+        FileViewModels = new ObservableCollection<FileItemViewModel>(list.Select(f => new FileItemViewModel(f)));
+
+        if (SelectedFileViewModel != null && !FileViewModels.Any(f => f.Id == SelectedFileViewModel.Id))
+        {
+            SelectedFileViewModel = FileViewModels.FirstOrDefault();
+        }
+        else if (SelectedFileViewModel == null && FileViewModels.Any())
+        {
+            SelectedFileViewModel = FileViewModels.First();
+        }
+
+        SelectedFile = SelectedFileViewModel?.Item;
 
         // Update Favorites badge count
         var favNav = SmartNavItems.FirstOrDefault(s => s.SmartCollection == SmartCollectionType.Favorites);
@@ -520,25 +571,23 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void OpenFile(FileItem? file)
+    private void OpenFile(object? param)
     {
-        var item = file ?? SelectedFile;
-        if (item == null || string.IsNullOrWhiteSpace(item.AbsolutePath)) return;
+        string? path = null;
+        if (param is FileItemViewModel vm) path = vm.AbsolutePath;
+        else if (param is FileItem fi) path = fi.AbsolutePath;
+        else if (SelectedFileViewModel != null) path = SelectedFileViewModel.AbsolutePath;
+        else if (SelectedFile != null) path = SelectedFile.AbsolutePath;
 
-        if (File.Exists(item.AbsolutePath))
+        if (string.IsNullOrWhiteSpace(path)) return;
+
+        if (FileLauncher.OpenFile(path))
         {
-            try
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = item.AbsolutePath,
-                    UseShellExecute = true
-                });
-            }
-            catch (Exception ex)
-            {
-                StatusMessage = $"Cannot open file: {ex.Message}";
-            }
+            StatusMessage = $"Opened: {Path.GetFileName(path)}";
+        }
+        else
+        {
+            StatusMessage = $"File not found or cannot be opened: {path}";
         }
     }
 
@@ -553,26 +602,23 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void OpenFolder(FileItem? file)
+    private void OpenFolder(object? param)
     {
-        var item = file ?? SelectedFile;
-        if (item == null || string.IsNullOrWhiteSpace(item.AbsolutePath)) return;
+        string? path = null;
+        if (param is FileItemViewModel vm) path = vm.AbsolutePath;
+        else if (param is FileItem fi) path = fi.AbsolutePath;
+        else if (SelectedFileViewModel != null) path = SelectedFileViewModel.AbsolutePath;
+        else if (SelectedFile != null) path = SelectedFile.AbsolutePath;
 
-        string? dir = Path.GetDirectoryName(item.AbsolutePath);
-        if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
+        if (string.IsNullOrWhiteSpace(path)) return;
+
+        if (FileLauncher.OpenFolder(path))
         {
-            try
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = dir,
-                    UseShellExecute = true
-                });
-            }
-            catch (Exception ex)
-            {
-                StatusMessage = $"Cannot open directory: {ex.Message}";
-            }
+            StatusMessage = $"Opened folder location: {Path.GetDirectoryName(path)}";
+        }
+        else
+        {
+            StatusMessage = $"Directory not found: {path}";
         }
     }
 
@@ -682,8 +728,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void OpenDuplicates()
     {
-        var dupItem = SmartNavItems.FirstOrDefault(s => s.SmartCollection == SmartCollectionType.Duplicates);
-        SelectNavigationItem(dupItem);
+        OpenRecent();
     }
 
     [RelayCommand]
@@ -702,7 +747,8 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void OpenSettings()
     {
-        StatusMessage = "Settings view opened";
+        IsSettingsOpen = !IsSettingsOpen;
+        StatusMessage = IsSettingsOpen ? "Settings opened" : "Settings closed";
     }
 
     [RelayCommand]

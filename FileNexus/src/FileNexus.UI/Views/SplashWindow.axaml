@@ -1,0 +1,79 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="FileNexus.UI.Views.SplashWindow"
+        Title="FileNexus"
+        Width="480" Height="320"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowDecorations="None"
+        Background="Transparent"
+        TransparencyLevelHint="AcrylicBlur"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Border CornerRadius="20" ClipToBounds="True">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Color="#0B0F19" Offset="0"/>
+                <GradientStop Color="#0F172A" Offset="0.5"/>
+                <GradientStop Color="#1a1040" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
+
+        <Grid RowDefinitions="*, Auto">
+            <!-- Central Logo Area -->
+            <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
+                <!-- App Logo Image -->
+                <Border Width="110" Height="110" CornerRadius="24" ClipToBounds="True"
+                        HorizontalAlignment="Center">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="40" Color="#6366F1" Opacity="0.6" OffsetX="0" OffsetY="0"/>
+                    </Border.Effect>
+                    <Image Source="avares://FileNexus.UI/Assets/app_logo.png" Stretch="Uniform"/>
+                </Border>
+
+                <!-- App Name -->
+                <StackPanel HorizontalAlignment="Center" Spacing="4">
+                    <TextBlock Text="FileNexus" 
+                               Foreground="White" 
+                               FontSize="32" 
+                               FontWeight="Bold" 
+                               HorizontalAlignment="Center"
+                               LetterSpacing="1"/>
+                    <TextBlock Text="Modern Virtual File Library" 
+                               Foreground="#94A3B8" 
+                               FontSize="13" 
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Bottom Loading Area -->
+            <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,28" Spacing="12">
+                <!-- Loading Bar Track -->
+                <Border Width="200" Height="3" Background="#1E293B" CornerRadius="2" HorizontalAlignment="Center">
+                    <Border x:Name="LoadingBar" HorizontalAlignment="Left" Height="3" CornerRadius="2" Width="0">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                <GradientStop Color="#6366F1" Offset="0"/>
+                                <GradientStop Color="#818CF8" Offset="0.5"/>
+                                <GradientStop Color="#38BDF8" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+                </Border>
+
+                <TextBlock x:Name="StatusText"
+                           Text="Initializing…" 
+                           Foreground="#64748B" 
+                           FontSize="11" 
+                           HorizontalAlignment="Center"/>
+
+                <!-- Version Badge -->
+                <TextBlock Text="v0.1.0" 
+                           Foreground="#334155" 
+                           FontSize="10" 
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
