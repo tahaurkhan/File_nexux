@@ -1,0 +1,15 @@
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/bin/Debug/net10.0/FileNexus.Interop.deps.json
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/bin/Debug/net10.0/FileNexus.Interop.dll
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/bin/Debug/net10.0/FileNexus.Interop.pdb
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/obj/Debug/net10.0/FileNexus.Interop.GeneratedMSBuildEditorConfig.editorconfig
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/obj/Debug/net10.0/FileNexus.Interop.AssemblyInfoInputs.cache
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/obj/Debug/net10.0/FileNexus.Interop.AssemblyInfo.cs
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/obj/Debug/net10.0/FileNexus.Interop.csproj.CoreCompileInputs.cache
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/obj/Debug/net10.0/FileNexus.Interop.dll
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/obj/Debug/net10.0/refint/FileNexus.Interop.dll
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/obj/Debug/net10.0/FileNexus.Interop.pdb
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/obj/Debug/net10.0/ref/FileNexus.Interop.dll
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/bin/Debug/net10.0/FileNexus.Shared.dll
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/bin/Debug/net10.0/FileNexus.Shared.pdb
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/obj/Debug/net10.0/FileNexus.Interop.csproj.AssemblyReference.cache
+/home/tahaur/Projects/FileNexus/src/FileNexus.Interop/obj/Debug/net10.0/FileNexu.ACD0FBF9.Up2Date

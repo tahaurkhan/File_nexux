@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:FileNexus.UI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="30"
+             x:Class="FileNexus.UI.Views.Controls.MenuBarControl"
+             x:DataType="vm:MainWindowViewModel">
+
+    <Border Background="#0B0F19" BorderBrush="#1E293B" BorderThickness="0,0,0,1" Padding="6,1">
+        <Grid ColumnDefinitions="Auto, *, Auto">
+            <!-- Main Desktop Window Menu -->
+            <Menu Grid.Column="0" Height="26" VerticalAlignment="Center">
+                <MenuItem Header="_File">
+                    <MenuItem Header="New Workspace" InputGesture="Ctrl+N" Command="{Binding NewWorkspaceCommand}"/>
+                    <MenuItem Header="Open Folder..." InputGesture="Ctrl+O" Command="{Binding ToggleFolderManagerCommand}"/>
+                    <MenuItem Header="Rescan Workspace" InputGesture="Ctrl+R" Command="{Binding ScanWorkspaceCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="Import Index..." Command="{Binding ImportIndexCommand}"/>
+                    <MenuItem Header="Export Index..." Command="{Binding ExportIndexCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="Quit" InputGesture="Alt+F4" Command="{Binding QuitCommand}"/>
+                </MenuItem>
+
+                <MenuItem Header="_Edit">
+                    <MenuItem Header="Undo" InputGesture="Ctrl+Z"/>
+                    <MenuItem Header="Redo" InputGesture="Ctrl+Y"/>
+                    <Separator/>
+                    <MenuItem Header="Cut" InputGesture="Ctrl+X"/>
+                    <MenuItem Header="Copy" InputGesture="Ctrl+C"/>
+                    <MenuItem Header="Paste" InputGesture="Ctrl+V"/>
+                    <Separator/>
+                    <MenuItem Header="Select All" InputGesture="Ctrl+A"/>
+                </MenuItem>
+
+                <MenuItem Header="_View">
+                    <MenuItem Header="Toggle Sidebar" InputGesture="Ctrl+B" Command="{Binding ToggleSidebarCommand}"/>
+                    <MenuItem Header="Refresh" InputGesture="F5" Command="{Binding RefreshDataCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="Toggle Theme (Dark/Light)" Command="{Binding ToggleThemeCommand}"/>
+                </MenuItem>
+
+                <MenuItem Header="_Search">
+                    <MenuItem Header="Focus Global Search" InputGesture="Ctrl+K" Command="{Binding FocusSearchCommand}"/>
+                    <MenuItem Header="Clear Search &amp; Filters" Command="{Binding ClearSearchCommand}"/>
+                </MenuItem>
+
+                <MenuItem Header="_Index">
+                    <MenuItem Header="Scan Workspace" Command="{Binding ScanWorkspaceCommand}"/>
+                    <MenuItem Header="Index Folder..." Command="{Binding ToggleFolderManagerCommand}"/>
+                    <MenuItem Header="Rebuild Database Index" Command="{Binding RebuildIndexCommand}"/>
+                    <MenuItem Header="Index Manager" Command="{Binding OpenIndexManagerCommand}"/>
+                </MenuItem>
+
+                <MenuItem Header="_Tools">
+                    <MenuItem Header="Find Duplicates" Command="{Binding OpenDuplicatesCommand}"/>
+                    <MenuItem Header="Recent Files" Command="{Binding OpenRecentCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="Settings" InputGesture="Ctrl+P" Command="{Binding OpenSettingsCommand}"/>
+                </MenuItem>
+
+                <MenuItem Header="_Help">
+                    <MenuItem Header="Documentation"/>
+                    <MenuItem Header="Keyboard Shortcuts" InputGesture="F1"/>
+                    <MenuItem Header="Check for Updates..."/>
+                    <Separator/>
+                    <MenuItem Header="About FileNexus" Command="{Binding OpenAboutCommand}"/>
+                </MenuItem>
+            </Menu>
+
+            <!-- Window Status Indicator (Right aligned) -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Margin="0,0,8,0">
+                <Border Background="#1E293B" CornerRadius="4" Padding="6,2">
+                    <TextBlock Text="VIRTUAL LIBRARY v0.1.0" Foreground="#64748B" FontSize="10" FontWeight="SemiBold"/>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
+
+

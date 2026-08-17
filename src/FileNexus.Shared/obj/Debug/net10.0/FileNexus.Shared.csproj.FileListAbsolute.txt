@@ -1,0 +1,11 @@
+/home/tahaur/Projects/FileNexus/src/FileNexus.Shared/bin/Debug/net10.0/FileNexus.Shared.deps.json
+/home/tahaur/Projects/FileNexus/src/FileNexus.Shared/bin/Debug/net10.0/FileNexus.Shared.dll
+/home/tahaur/Projects/FileNexus/src/FileNexus.Shared/bin/Debug/net10.0/FileNexus.Shared.pdb
+/home/tahaur/Projects/FileNexus/src/FileNexus.Shared/obj/Debug/net10.0/FileNexus.Shared.GeneratedMSBuildEditorConfig.editorconfig
+/home/tahaur/Projects/FileNexus/src/FileNexus.Shared/obj/Debug/net10.0/FileNexus.Shared.AssemblyInfoInputs.cache
+/home/tahaur/Projects/FileNexus/src/FileNexus.Shared/obj/Debug/net10.0/FileNexus.Shared.AssemblyInfo.cs
+/home/tahaur/Projects/FileNexus/src/FileNexus.Shared/obj/Debug/net10.0/FileNexus.Shared.csproj.CoreCompileInputs.cache
+/home/tahaur/Projects/FileNexus/src/FileNexus.Shared/obj/Debug/net10.0/FileNexus.Shared.dll
+/home/tahaur/Projects/FileNexus/src/FileNexus.Shared/obj/Debug/net10.0/refint/FileNexus.Shared.dll
+/home/tahaur/Projects/FileNexus/src/FileNexus.Shared/obj/Debug/net10.0/FileNexus.Shared.pdb
+/home/tahaur/Projects/FileNexus/src/FileNexus.Shared/obj/Debug/net10.0/ref/FileNexus.Shared.dll

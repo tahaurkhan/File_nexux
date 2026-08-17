@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "dgSpecHash": "fkNvxQFvUyE=",
+  "success": true,
+  "projectFilePath": "/home/tahaur/Projects/FileNexus/src/FileNexus.Core/FileNexus.Core.csproj",
+  "expectedPackageFiles": [
+    "/home/tahaur/.nuget/packages/microsoft.data.sqlite/9.0.0/microsoft.data.sqlite.9.0.0.nupkg.sha512",
+    "/home/tahaur/.nuget/packages/microsoft.data.sqlite.core/9.0.0/microsoft.data.sqlite.core.9.0.0.nupkg.sha512",
+    "/home/tahaur/.nuget/packages/microsoft.extensions.dependencyinjection/9.0.0/microsoft.extensions.dependencyinjection.9.0.0.nupkg.sha512",
+    "/home/tahaur/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.0/microsoft.extensions.dependencyinjection.abstractions.9.0.0.nupkg.sha512",
+    "/home/tahaur/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/2.1.10/sqlitepclraw.bundle_e_sqlite3.2.1.10.nupkg.sha512",
+    "/home/tahaur/.nuget/packages/sqlitepclraw.core/2.1.10/sqlitepclraw.core.2.1.10.nupkg.sha512",
+    "/home/tahaur/.nuget/packages/sqlitepclraw.lib.e_sqlite3/2.1.10/sqlitepclraw.lib.e_sqlite3.2.1.10.nupkg.sha512",
+    "/home/tahaur/.nuget/packages/sqlitepclraw.provider.e_sqlite3/2.1.10/sqlitepclraw.provider.e_sqlite3.2.1.10.nupkg.sha512"
+  ],
+  "logs": []
+}

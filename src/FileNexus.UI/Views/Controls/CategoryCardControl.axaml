@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FileNexus.UI.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="260" d:DesignHeight="140"
+             x:Class="FileNexus.UI.Views.Controls.CategoryCardControl"
+             x:DataType="vm:CategoryCardViewModel">
+
+    <Design.DataContext>
+        <vm:CategoryCardViewModel Name="Documents" Icon="📄" FileCount="3412" FormattedStorage="12.4 GB" Percentage="18.5" BadgeColor="#3B82F6"/>
+    </Design.DataContext>
+
+    <Button Command="{Binding $parent[UserControl].((vm:DashboardViewModel)DataContext).SelectCategoryCardCommand}" 
+            CommandParameter="{Binding}"
+            Background="Transparent" Padding="0" Margin="0" BorderThickness="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+        <Border Classes="glass-card">
+            <Grid RowDefinitions="Auto, *, Auto, Auto">
+                <!-- Icon & Category Title -->
+                <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto">
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+                        <Border Background="{Binding BadgeColor}" CornerRadius="10" Width="36" Height="36" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Icon}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Name}" Foreground="#F8FAFC" FontSize="14" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding FileCount, StringFormat='{}{0:N0} files'}" Foreground="#94A3B8" FontSize="11"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Border Grid.Column="2" Background="#0F172A" CornerRadius="6" Padding="8,4" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Percentage, StringFormat='{}{0:0.#}%'}" Foreground="{Binding BadgeColor}" FontSize="11" FontWeight="Bold"/>
+                    </Border>
+                </Grid>
+
+                <!-- Storage Info -->
+                <StackPanel Grid.Row="1" Margin="0,14,0,8" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding FormattedStorage}" Foreground="#E2E8F0" FontSize="16" FontWeight="SemiBold"/>
+                </StackPanel>
+
+                <!-- Progress Bar -->
+                <ProgressBar Grid.Row="2" Value="{Binding Percentage}" Maximum="100" Classes="category-progress" Foreground="{Binding BadgeColor}" Margin="0,0,0,8"/>
+
+                <!-- Footer Call to Action -->
+                <Grid Grid.Row="3" ColumnDefinitions="*, Auto">
+                    <TextBlock Grid.Column="0" Text="Explore Category" Foreground="#64748B" FontSize="11"/>
+                    <TextBlock Grid.Column="1" Text="→" Foreground="{Binding BadgeColor}" FontSize="12" FontWeight="Bold"/>
+                </Grid>
+            </Grid>
+        </Border>
+    </Button>
+</UserControl>

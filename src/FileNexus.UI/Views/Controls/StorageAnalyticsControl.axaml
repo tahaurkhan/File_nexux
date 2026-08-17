@@ -1,0 +1,101 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FileNexus.UI.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+             x:Class="FileNexus.UI.Views.Controls.StorageAnalyticsControl"
+             x:DataType="vm:DashboardViewModel">
+
+    <Border Classes="dashboard-card">
+        <Grid RowDefinitions="Auto, *">
+            <!-- Header -->
+            <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,16">
+                <StackPanel Grid.Column="0" Spacing="2">
+                    <TextBlock Text="Storage Analytics &amp; Distribution" Classes="section-title"/>
+                    <TextBlock Text="{Binding StorageAnalytics.TotalStorageFormatted, StringFormat='Total Indexed Storage: {0}'}" Classes="section-subtitle"/>
+                </StackPanel>
+                <Border Grid.Column="1" Background="#0F172A" CornerRadius="8" Padding="12,6" VerticalAlignment="Center">
+                    <TextBlock Text="📊 Realtime Breakdown" Foreground="#38BDF8" FontSize="11" FontWeight="Bold"/>
+                </Border>
+            </Grid>
+
+            <!-- Main Analytics Grid -->
+            <Grid Grid.Row="1" ColumnDefinitions="*, *">
+                <!-- Left Column: Top Categories Breakdown -->
+                <Border Grid.Column="0" Background="#0F172A" CornerRadius="10" Padding="14" Margin="0,0,8,0">
+                    <Grid RowDefinitions="Auto, *">
+                        <TextBlock Grid.Row="0" Text="LARGEST CATEGORIES" Foreground="#64748B" FontSize="11" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding StorageAnalytics.Categories}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:CategoryStorageItem">
+                                        <StackPanel Spacing="4" Margin="0,0,0,10">
+                                            <Grid ColumnDefinitions="Auto, *, Auto">
+                                                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6">
+                                                    <TextBlock Text="{Binding Icon}" FontSize="12"/>
+                                                    <TextBlock Text="{Binding Name}" Foreground="#F8FAFC" FontSize="12" FontWeight="SemiBold"/>
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="2" Text="{Binding FormattedSize}" Foreground="#94A3B8" FontSize="11"/>
+                                            </Grid>
+                                            <ProgressBar Value="{Binding Percentage}" Maximum="100" Height="6" CornerRadius="3" Background="#1E293B" Foreground="{Binding Color}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+
+                <!-- Right Column: Top Extensions & Largest Folders -->
+                <Grid Grid.Column="1" RowDefinitions="*, *" Margin="8,0,0,0">
+                    <!-- Top Extensions -->
+                    <Border Grid.Row="0" Background="#0F172A" CornerRadius="10" Padding="14" Margin="0,0,0,8">
+                        <Grid RowDefinitions="Auto, *">
+                            <TextBlock Grid.Row="0" Text="TOP EXTENSIONS" Foreground="#64748B" FontSize="11" FontWeight="Bold" Margin="0,0,0,8"/>
+                            <ItemsControl Grid.Row="1" ItemsSource="{Binding StorageAnalytics.TopExtensions}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:ExtensionStorageItem">
+                                        <Border Background="#1E293B" CornerRadius="8" Padding="10,6" Margin="0,0,6,6" BorderBrush="#334155" BorderThickness="1">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <TextBlock Text="{Binding Extension}" Foreground="{Binding Color}" FontWeight="Bold" FontSize="12"/>
+                                                <TextBlock Text="{Binding FormattedSize}" Foreground="#CBD5E1" FontSize="11"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </Border>
+
+                    <!-- Largest Folders -->
+                    <Border Grid.Row="1" Background="#0F172A" CornerRadius="10" Padding="14" Margin="0,8,0,0">
+                        <Grid RowDefinitions="Auto, *">
+                            <TextBlock Grid.Row="0" Text="LARGEST FOLDERS" Foreground="#64748B" FontSize="11" FontWeight="Bold" Margin="0,0,0,8"/>
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding StorageAnalytics.LargestFolders}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:FolderStorageItem">
+                                            <Grid ColumnDefinitions="*, Auto" Margin="0,3">
+                                                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6">
+                                                    <TextBlock Text="📁" FontSize="12"/>
+                                                    <TextBlock Text="{Binding FolderName}" Foreground="#E2E8F0" FontSize="12" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding FolderPath}"/>
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1" Text="{Binding FormattedSize}" Foreground="#38BDF8" FontSize="11" FontWeight="SemiBold"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,74 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FileNexus.UI.ViewModels"
+             xmlns:models="using:FileNexus.Shared.Models"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="350"
+             x:Class="FileNexus.UI.Views.Controls.LargestFilesControl"
+             x:DataType="vm:DashboardViewModel">
+
+    <Border Classes="dashboard-card">
+        <Grid RowDefinitions="Auto, *">
+            <!-- Header -->
+            <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,14">
+                <StackPanel Grid.Column="0" Spacing="2">
+                    <TextBlock Text="Largest Files (Top 10)" Classes="section-title"/>
+                    <TextBlock Text="Files consuming the highest amount of storage space" Classes="section-subtitle"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Top 10 Files List -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="320">
+                <ItemsControl ItemsSource="{Binding LargestFiles}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="8"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:FileItem">
+                            <Border Background="#0F172A" CornerRadius="10" Padding="12,10" BorderBrush="#334155" BorderThickness="1">
+                                <Grid ColumnDefinitions="Auto, *, Auto, Auto">
+                                    <!-- Badge / Thumbnail -->
+                                    <Border Grid.Column="0" Background="#312E81" CornerRadius="8" Width="38" Height="38" VerticalAlignment="Center" Margin="0,0,12,0">
+                                        <TextBlock Text="🔥" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+
+                                    <!-- File Details -->
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{Binding Name}" Foreground="#F8FAFC" FontWeight="SemiBold" FontSize="13" TextTrimming="CharacterEllipsis"/>
+                                            <Border Background="#4F46E5" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Category}" Foreground="#FFFFFF" FontWeight="SemiBold" FontSize="10"/>
+                                            </Border>
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding AbsolutePath}" Foreground="#64748B" FontSize="11" TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+
+                                    <!-- Size -->
+                                    <Border Grid.Column="2" Background="#1E293B" CornerRadius="6" Padding="10,5" VerticalAlignment="Center" Margin="12,0">
+                                        <TextBlock Text="{Binding FormattedSize}" Foreground="#F59E0B" FontSize="12" FontWeight="Bold"/>
+                                    </Border>
+
+                                    <!-- Quick Actions -->
+                                    <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                                        <Button Command="{Binding $parent[UserControl].((vm:DashboardViewModel)DataContext).OpenFileCommand}" 
+                                                CommandParameter="{Binding}" Classes="icon-btn" ToolTip.Tip="Open File">
+                                            <TextBlock Text="↗️"/>
+                                        </Button>
+                                        <Button Command="{Binding $parent[UserControl].((vm:DashboardViewModel)DataContext).RevealFileCommand}" 
+                                                CommandParameter="{Binding}" Classes="icon-btn" ToolTip.Tip="Reveal in Folder">
+                                            <TextBlock Text="📁"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>
