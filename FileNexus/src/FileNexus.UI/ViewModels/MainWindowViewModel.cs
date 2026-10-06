@@ -46,7 +46,17 @@ public partial class MainWindowViewModel : ViewModelBase
     public partial ThemeOption CurrentThemeMode { get; set; } = ThemeOption.System;
 
     [ObservableProperty]
+    public partial bool IsSplashVisible { get; set; } = true;
+
+    [ObservableProperty]
+    public partial string SplashStatus { get; set; } = "Initializing FileNexus...";
+
+    [ObservableProperty]
+    public partial double SplashProgress { get; set; } = 0.2;
+
+    [ObservableProperty]
     public partial bool IsSettingsOpen { get; set; }
+
 
     // Navigation Hierarchy
     [ObservableProperty]
@@ -203,13 +213,24 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public async Task InitializeAsync()
     {
-        if (_workspaceService == null || _fileService == null) return;
+        IsSplashVisible = true;
+        SplashStatus = "Starting FileNexus Core...";
+        SplashProgress = 0.15;
+        await Task.Delay(300);
 
-        StatusMessage = "Loading Workspaces...";
+        if (_workspaceService == null || _fileService == null)
+        {
+            IsSplashVisible = false;
+            return;
+        }
+
+        SplashStatus = "Loading Workspaces & Index Engine...";
+        SplashProgress = 0.45;
+        await Task.Delay(350);
+
         var list = await _workspaceService.GetWorkspacesAsync();
         Workspaces = new ObservableCollection<Workspace>(list);
 
-        // Ensure default workspaces if none exist
         if (!Workspaces.Any())
         {
             Workspaces.Add(new Workspace { Id = "ws_personal", Name = "Personal", Description = "Personal files workspace" });
@@ -218,9 +239,21 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         SelectedWorkspace = Workspaces.FirstOrDefault();
+
+        SplashStatus = "Indexing Virtual Library & Formats...";
+        SplashProgress = 0.80;
+        await Task.Delay(350);
+
         await RefreshDataAsync();
+
+        SplashStatus = "Welcome to FileNexus!";
+        SplashProgress = 1.0;
         StatusMessage = "Virtual Library Ready";
+
+        await Task.Delay(400);
+        IsSplashVisible = false;
     }
+
 
     [RelayCommand]
     private void ToggleSidebar()

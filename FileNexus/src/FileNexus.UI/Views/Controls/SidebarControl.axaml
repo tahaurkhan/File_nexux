@@ -24,7 +24,10 @@
                 <Grid ColumnDefinitions="*, Auto">
                     <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center"
                                 IsVisible="{Binding !IsSidebarCollapsed}">
-                        <TextBlock Text="VIRTUAL LIBRARY" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" FontWeight="Bold"/>
+                        <Border Width="22" Height="22" CornerRadius="6" ClipToBounds="True" VerticalAlignment="Center">
+                            <Image Source="avares://FileNexus.UI/Assets/app_logo.png" Stretch="Uniform"/>
+                        </Border>
+                        <TextBlock Text="VIRTUAL LIBRARY" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" FontWeight="Bold" VerticalAlignment="Center"/>
                     </StackPanel>
 
                     <!-- Collapse / Expand Button -->
