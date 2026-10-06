@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FileNexus.Interop")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a130145bdb151f505db32a7b0f1404eefb5f1986")]
 [assembly: System.Reflection.AssemblyProductAttribute("FileNexus.Interop")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FileNexus.Interop")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
