@@ -247,12 +247,15 @@
             <Border Background="{DynamicResource ModalBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" 
                     BorderThickness="1" CornerRadius="14" Padding="24" Width="440" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Spacing="18">
-                    <Grid ColumnDefinitions="*, Auto">
-                        <StackPanel Grid.Column="0" Spacing="2">
+                    <Grid ColumnDefinitions="Auto, *, Auto">
+                        <Border Grid.Column="0" Width="38" Height="38" CornerRadius="10" ClipToBounds="True" Margin="0,0,12,0" VerticalAlignment="Center">
+                            <Image Source="avares://FileNexus.UI/Assets/setting_logo.png" Stretch="Uniform"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
                             <TextBlock Text="Settings &amp; Preferences" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="18" FontWeight="Bold"/>
                             <TextBlock Text="Configure appearance and application settings" Foreground="{DynamicResource TextMutedBrush}" FontSize="12"/>
                         </StackPanel>
-                        <Button Grid.Column="1" Command="{Binding OpenSettingsCommand}" Classes="icon-btn" ToolTip.Tip="Close">
+                        <Button Grid.Column="2" Command="{Binding OpenSettingsCommand}" Classes="icon-btn" ToolTip.Tip="Close" VerticalAlignment="Center">
                             <TextBlock Text="✕" FontSize="14"/>
                         </Button>
                     </Grid>
@@ -294,6 +297,39 @@
             </Border>
         </Border>
 
+        <!-- 5.B. ABOUT DIALOG MODAL -->
+        <Border Grid.Row="0" Grid.RowSpan="5" Background="#80000000" IsVisible="{Binding IsAboutOpen}" ZIndex="999">
+            <Border Background="{DynamicResource ModalBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" 
+                    BorderThickness="1" CornerRadius="16" Padding="28" Width="460" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Spacing="20" HorizontalAlignment="Center">
+                    <!-- App Logo with Glow -->
+                    <Border Width="90" Height="90" CornerRadius="20" ClipToBounds="True" HorizontalAlignment="Center">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="30" Color="#6366F1" Opacity="0.6" OffsetX="0" OffsetY="0"/>
+                        </Border.Effect>
+                        <controls:AppLogoControl Width="90" Height="90" LogoCornerRadius="20"/>
+                    </Border>
+
+                    <!-- Title & Version -->
+                    <StackPanel Spacing="4" HorizontalAlignment="Center">
+                        <TextBlock Text="FileNexus" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Modern Virtual File Library" Foreground="#38BDF8" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                        <Border Background="{DynamicResource BadgeBackgroundBrush}" CornerRadius="10" Padding="8,3" HorizontalAlignment="Center" Margin="0,4,0,0">
+                            <TextBlock Text="Version 0.1.0 • .NET 10 &amp; Rust Engine" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="11" FontWeight="Medium"/>
+                        </Border>
+                    </StackPanel>
+
+                    <TextBlock Text="FileNexus provides high-performance, privacy-first virtual workspace indexing and metadata organization without altering your physical files."
+                               Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="380"/>
+
+                    <!-- Action Buttons -->
+                    <Button Command="{Binding OpenAboutCommand}" Classes="action-primary" HorizontalAlignment="Center" Padding="24,8">
+                        <TextBlock Text="Close"/>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Border>
+
         <!-- 6. FOOTER STATUS BAR -->
         <Border Grid.Row="4" Background="{DynamicResource ToolbarBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0,1,0,0" Padding="16,6">
             <Grid ColumnDefinitions="*, Auto">
@@ -314,7 +350,7 @@
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="40" Color="#6366F1" Opacity="0.6" OffsetX="0" OffsetY="0"/>
                         </Border.Effect>
-                        <Image Source="avares://FileNexus.UI/Assets/app_logo.png" Stretch="Uniform"/>
+                        <controls:AppLogoControl Width="110" Height="110" LogoCornerRadius="24"/>
                     </Border>
 
                     <!-- App Title -->

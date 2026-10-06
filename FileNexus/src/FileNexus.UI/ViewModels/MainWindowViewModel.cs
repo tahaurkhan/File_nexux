@@ -57,6 +57,9 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     public partial bool IsSettingsOpen { get; set; }
 
+    [ObservableProperty]
+    public partial bool IsAboutOpen { get; set; }
+
 
     // Navigation Hierarchy
     [ObservableProperty]
@@ -183,14 +186,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
         LibraryNavItems =
         [
-            new() { Id = "Doc", Title = "Documents", Icon = "📄", Group = NavigationGroup.Library, Category = FileCategory.Documents, BadgeColor = "#3B82F6", Tooltip = "Documents & PDFs" },
-            new() { Id = "Img", Title = "Images", Icon = "🖼", Group = NavigationGroup.Library, Category = FileCategory.Images, BadgeColor = "#10B981", Tooltip = "Images & Graphics" },
-            new() { Id = "Vid", Title = "Videos", Icon = "🎥", Group = NavigationGroup.Library, Category = FileCategory.Videos, BadgeColor = "#F59E0B", Tooltip = "Videos & Clips" },
-            new() { Id = "Aud", Title = "Audio", Icon = "🎵", Group = NavigationGroup.Library, Category = FileCategory.Audio, BadgeColor = "#8B5CF6", Tooltip = "Audio & Music" },
-            new() { Id = "Code", Title = "Programming", Icon = "💻", Group = NavigationGroup.Library, Category = FileCategory.Code, BadgeColor = "#06B6D4", Tooltip = "Source Code & Scripts" },
-            new() { Id = "Arc", Title = "Archives", Icon = "📦", Group = NavigationGroup.Library, Category = FileCategory.Archives, BadgeColor = "#64748B", Tooltip = "Compressed Archives" },
-            new() { Id = "Exe", Title = "Executables", Icon = "⚙", Group = NavigationGroup.Library, Category = FileCategory.Executables, BadgeColor = "#EF4444", Tooltip = "Applications & Binaries" },
-            new() { Id = "Fol", Title = "Folders", Icon = "📁", Group = NavigationGroup.Library, Category = FileCategory.Other, BadgeColor = "#94A3B8", Tooltip = "Virtual Folders" }
+            new() { Id = "Doc", Title = "Documents", Icon = "📄", LogoPath = "avares://FileNexus.UI/Assets/document_logo.png", Group = NavigationGroup.Library, Category = FileCategory.Documents, BadgeColor = "#3B82F6", Tooltip = "Documents & PDFs" },
+            new() { Id = "Img", Title = "Images", Icon = "🖼", LogoPath = "avares://FileNexus.UI/Assets/image_logo.png", Group = NavigationGroup.Library, Category = FileCategory.Images, BadgeColor = "#10B981", Tooltip = "Images & Graphics" },
+            new() { Id = "Vid", Title = "Videos", Icon = "🎥", LogoPath = "avares://FileNexus.UI/Assets/video_logo.png", Group = NavigationGroup.Library, Category = FileCategory.Videos, BadgeColor = "#F59E0B", Tooltip = "Videos & Clips" },
+            new() { Id = "Aud", Title = "Audio", Icon = "🎵", LogoPath = "avares://FileNexus.UI/Assets/audio_logo.png", Group = NavigationGroup.Library, Category = FileCategory.Audio, BadgeColor = "#8B5CF6", Tooltip = "Audio & Music" },
+            new() { Id = "Code", Title = "Programming", Icon = "💻", LogoPath = "avares://FileNexus.UI/Assets/code_logo.png", Group = NavigationGroup.Library, Category = FileCategory.Code, BadgeColor = "#06B6D4", Tooltip = "Source Code & Scripts" },
+            new() { Id = "Arc", Title = "Archives", Icon = "📦", LogoPath = "avares://FileNexus.UI/Assets/archive_logo.png", Group = NavigationGroup.Library, Category = FileCategory.Archives, BadgeColor = "#64748B", Tooltip = "Compressed Archives" },
+            new() { Id = "Exe", Title = "Executables", Icon = "⚙", LogoPath = "avares://FileNexus.UI/Assets/executable_logo.png", Group = NavigationGroup.Library, Category = FileCategory.Executables, BadgeColor = "#EF4444", Tooltip = "Applications & Binaries" },
+            new() { Id = "Fol", Title = "Folders", Icon = "📁", LogoPath = "avares://FileNexus.UI/Assets/folder_logo.png", Group = NavigationGroup.Library, Category = FileCategory.Other, BadgeColor = "#94A3B8", Tooltip = "Virtual Folders" }
         ];
 
         SmartNavItems =
@@ -787,7 +790,8 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void OpenAbout()
     {
-        StatusMessage = "FileNexus v0.1.0 • Privacy-First Virtual File Library";
+        IsAboutOpen = !IsAboutOpen;
+        StatusMessage = IsAboutOpen ? "About FileNexus" : "Ready";
     }
 
     [RelayCommand]

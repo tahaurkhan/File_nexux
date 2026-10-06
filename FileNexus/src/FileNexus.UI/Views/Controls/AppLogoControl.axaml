@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="32" d:DesignHeight="32"
+             x:Class="FileNexus.UI.Views.Controls.AppLogoControl"
+             x:Name="RootLogoControl">
+
+    <Border CornerRadius="{Binding LogoCornerRadius, ElementName=RootLogoControl}" 
+            ClipToBounds="True" 
+            HorizontalAlignment="Stretch" 
+            VerticalAlignment="Stretch">
+        <Image Source="avares://FileNexus.UI/Assets/app_logo.png" Stretch="Uniform"/>
+    </Border>
+</UserControl>

@@ -35,6 +35,9 @@ public partial class NavigationItemViewModel : ViewModelBase
     private string _icon = string.Empty;
 
     [ObservableProperty]
+    private string? _logoPath;
+
+    [ObservableProperty]
     private NavigationGroup _group;
 
     [ObservableProperty]

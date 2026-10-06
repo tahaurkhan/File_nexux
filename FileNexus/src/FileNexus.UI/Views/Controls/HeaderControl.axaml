@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:FileNexus.UI.ViewModels"
+             xmlns:controls="using:FileNexus.UI.Views.Controls"
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="70"
              x:Class="FileNexus.UI.Views.Controls.HeaderControl"
              x:DataType="vm:MainWindowViewModel">
@@ -17,10 +18,7 @@
                 </Button>
 
                 <!-- App Logo -->
-                <Border CornerRadius="10" Width="36" Height="36" ClipToBounds="True"
-                        ToolTip.Tip="FileNexus v0.1.0">
-                    <Image Source="avares://FileNexus.UI/Assets/app_logo.png" Stretch="Uniform"/>
-                </Border>
+                <controls:AppLogoControl Width="36" Height="36" LogoCornerRadius="10" ToolTip.Tip="FileNexus v0.1.0" VerticalAlignment="Center"/>
 
                 <!-- Current Section & Breadcrumbs -->
                 <StackPanel VerticalAlignment="Center" Spacing="2">

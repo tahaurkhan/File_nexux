@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:FileNexus.UI.ViewModels"
              xmlns:models="using:FileNexus.Shared.Models"
+             xmlns:controls="using:FileNexus.UI.Views.Controls"
              mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="800"
              x:Class="FileNexus.UI.Views.Controls.SidebarControl"
              x:DataType="vm:MainWindowViewModel">
@@ -22,16 +23,19 @@
             <!-- Sidebar Header & Collapse Control -->
             <Border Grid.Row="0" Margin="0,0,0,12" Padding="4">
                 <Grid ColumnDefinitions="*, Auto">
+                    <!-- Expanded Header: Logo + Title -->
                     <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center"
                                 IsVisible="{Binding !IsSidebarCollapsed}">
-                        <Border Width="22" Height="22" CornerRadius="6" ClipToBounds="True" VerticalAlignment="Center">
-                            <Image Source="avares://FileNexus.UI/Assets/app_logo.png" Stretch="Uniform"/>
-                        </Border>
+                        <controls:AppLogoControl Width="22" Height="22" LogoCornerRadius="6" VerticalAlignment="Center"/>
                         <TextBlock Text="VIRTUAL LIBRARY" Foreground="{DynamicResource TextMutedBrush}" FontSize="11" FontWeight="Bold" VerticalAlignment="Center"/>
                     </StackPanel>
 
+                    <!-- Collapsed Header: Centered App Logo -->
+                    <controls:AppLogoControl Grid.Column="0" Width="24" Height="24" LogoCornerRadius="6" VerticalAlignment="Center" HorizontalAlignment="Left"
+                                             IsVisible="{Binding IsSidebarCollapsed}" ToolTip.Tip="FileNexus Virtual Library"/>
+
                     <!-- Collapse / Expand Button -->
-                    <Button Grid.Column="1" Command="{Binding ToggleSidebarCommand}" Classes="icon-btn" ToolTip.Tip="Collapse Sidebar (Ctrl+B)">
+                    <Button Grid.Column="1" Command="{Binding ToggleSidebarCommand}" Classes="icon-btn" ToolTip.Tip="Toggle Sidebar (Ctrl+B)">
                         <TextBlock Text="{Binding SidebarToggleIcon}" FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}"/>
                     </Button>
                 </Grid>
@@ -71,7 +75,10 @@
                                             Classes="nav-item" Classes.active="{Binding IsSelected}"
                                             ToolTip.Tip="{Binding Tooltip}">
                                         <Grid ColumnDefinitions="Auto, *, Auto">
-                                            <TextBlock Grid.Column="0" Text="{Binding Icon}" FontSize="15" VerticalAlignment="Center" Width="24" TextAlignment="Center"/>
+                                            <Panel Grid.Column="0" Width="24" Height="24" VerticalAlignment="Center">
+                                                <Image Source="{Binding LogoPath}" Stretch="Uniform" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding LogoPath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                                <TextBlock Text="{Binding Icon}" FontSize="15" VerticalAlignment="Center" TextAlignment="Center" IsVisible="{Binding LogoPath, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+                                            </Panel>
                                             <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" FontSize="13"
                                                        Margin="8,0,0,0" IsVisible="{Binding !$parent[UserControl].((vm:MainWindowViewModel)DataContext).IsSidebarCollapsed}"/>
                                             <Border Grid.Column="2" Background="{Binding BadgeColor}" CornerRadius="10" Padding="6,2" Opacity="0.85"

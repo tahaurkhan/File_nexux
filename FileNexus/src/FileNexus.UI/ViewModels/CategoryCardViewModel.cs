@@ -15,6 +15,9 @@ public partial class CategoryCardViewModel : ViewModelBase
     public partial string Icon { get; set; } = "📁";
 
     [ObservableProperty]
+    public partial string? LogoPath { get; set; }
+
+    [ObservableProperty]
     public partial long FileCount { get; set; }
 
     [ObservableProperty]

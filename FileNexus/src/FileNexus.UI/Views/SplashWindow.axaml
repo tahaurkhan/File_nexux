@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:FileNexus.UI.Views.Controls"
         x:Class="FileNexus.UI.Views.SplashWindow"
         Title="FileNexus"
         Width="500" Height="340"
@@ -28,7 +29,7 @@
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="40" Color="#6366F1" Opacity="0.75" OffsetX="0" OffsetY="0"/>
                     </Border.Effect>
-                    <Image Source="avares://FileNexus.UI/Assets/app_logo.png" Stretch="Uniform"/>
+                    <controls:AppLogoControl Width="110" Height="110" LogoCornerRadius="24"/>
                 </Border>
 
                 <!-- App Name & Subtitle -->

@@ -135,20 +135,20 @@ public partial class DashboardViewModel : ViewModelBase
         ];
 
         // Category Cards
-        var categoryMetadata = new (FileCategory Cat, string Name, string Icon, string Color)[]
+        var categoryMetadata = new (FileCategory Cat, string Name, string Icon, string LogoPath, string Color)[]
         {
-            (FileCategory.Documents, "Documents", "📄", "#3B82F6"),
-            (FileCategory.Images, "Images", "🖼️", "#10B981"),
-            (FileCategory.Videos, "Videos", "🎥", "#F59E0B"),
-            (FileCategory.Audio, "Audio", "🎵", "#8B5CF6"),
-            (FileCategory.Code, "Programming", "💻", "#06B6D4"),
-            (FileCategory.Archives, "Archives", "📦", "#64748B"),
-            (FileCategory.Executables, "Executables", "⚙️", "#EF4444"),
-            (FileCategory.Other, "Folders & Other", "📁", "#94A3B8")
+            (FileCategory.Documents, "Documents", "📄", "avares://FileNexus.UI/Assets/document_logo.png", "#3B82F6"),
+            (FileCategory.Images, "Images", "🖼️", "avares://FileNexus.UI/Assets/image_logo.png", "#10B981"),
+            (FileCategory.Videos, "Videos", "🎥", "avares://FileNexus.UI/Assets/video_logo.png", "#F59E0B"),
+            (FileCategory.Audio, "Audio", "🎵", "avares://FileNexus.UI/Assets/audio_logo.png", "#8B5CF6"),
+            (FileCategory.Code, "Programming", "💻", "avares://FileNexus.UI/Assets/code_logo.png", "#06B6D4"),
+            (FileCategory.Archives, "Archives", "📦", "avares://FileNexus.UI/Assets/archive_logo.png", "#64748B"),
+            (FileCategory.Executables, "Executables", "⚙️", "avares://FileNexus.UI/Assets/executable_logo.png", "#EF4444"),
+            (FileCategory.Other, "Folders & Other", "📁", "avares://FileNexus.UI/Assets/folder_logo.png", "#94A3B8")
         };
 
         var catCardList = new List<CategoryCardViewModel>();
-        foreach (var (cat, name, icon, color) in categoryMetadata)
+        foreach (var (cat, name, icon, logoPath, color) in categoryMetadata)
         {
             long count = catCounts.TryGetValue(cat, out var c) ? c : 0;
             var catFiles = allFiles.Where(f => f.Category == cat).ToList();
@@ -160,6 +160,7 @@ public partial class DashboardViewModel : ViewModelBase
                 Category = cat,
                 Name = name,
                 Icon = icon,
+                LogoPath = logoPath,
                 FileCount = count,
                 StorageBytes = catBytes,
                 FormattedStorage = FormatSize(catBytes),
@@ -254,14 +255,14 @@ public partial class DashboardViewModel : ViewModelBase
 
         CategoryCards =
         [
-            new CategoryCardViewModel { Category = FileCategory.Documents, Name = "Documents", Icon = "📄", FileCount = 3412, FormattedStorage = "12.4 GB", Percentage = 18.5, BadgeColor = "#3B82F6" },
-            new CategoryCardViewModel { Category = FileCategory.Images, Name = "Images", Icon = "🖼️", FileCount = 6840, FormattedStorage = "42.8 GB", Percentage = 32.1, BadgeColor = "#10B981" },
-            new CategoryCardViewModel { Category = FileCategory.Videos, Name = "Videos", Icon = "🎥", FileCount = 412, FormattedStorage = "84.6 GB", Percentage = 45.2, BadgeColor = "#F59E0B" },
-            new CategoryCardViewModel { Category = FileCategory.Audio, Name = "Audio", Icon = "🎵", FileCount = 1250, FormattedStorage = "14.2 GB", Percentage = 8.4, BadgeColor = "#8B5CF6" },
-            new CategoryCardViewModel { Category = FileCategory.Code, Name = "Programming", Icon = "💻", FileCount = 2100, FormattedStorage = "3.1 GB", Percentage = 2.2, BadgeColor = "#06B6D4" },
-            new CategoryCardViewModel { Category = FileCategory.Archives, Name = "Archives", Icon = "📦", FileCount = 180, FormattedStorage = "18.5 GB", Percentage = 10.1, BadgeColor = "#64748B" },
-            new CategoryCardViewModel { Category = FileCategory.Executables, Name = "Executables", Icon = "⚙️", FileCount = 95, FormattedStorage = "6.4 GB", Percentage = 3.5, BadgeColor = "#EF4444" },
-            new CategoryCardViewModel { Category = FileCategory.Other, Name = "Folders & Other", Icon = "📁", FileCount = 531, FormattedStorage = "2.2 GB", Percentage = 1.2, BadgeColor = "#94A3B8" }
+            new CategoryCardViewModel { Category = FileCategory.Documents, Name = "Documents", Icon = "📄", LogoPath = "avares://FileNexus.UI/Assets/document_logo.png", FileCount = 3412, FormattedStorage = "12.4 GB", Percentage = 18.5, BadgeColor = "#3B82F6" },
+            new CategoryCardViewModel { Category = FileCategory.Images, Name = "Images", Icon = "🖼️", LogoPath = "avares://FileNexus.UI/Assets/image_logo.png", FileCount = 6840, FormattedStorage = "42.8 GB", Percentage = 32.1, BadgeColor = "#10B981" },
+            new CategoryCardViewModel { Category = FileCategory.Videos, Name = "Videos", Icon = "🎥", LogoPath = "avares://FileNexus.UI/Assets/video_logo.png", FileCount = 412, FormattedStorage = "84.6 GB", Percentage = 45.2, BadgeColor = "#F59E0B" },
+            new CategoryCardViewModel { Category = FileCategory.Audio, Name = "Audio", Icon = "🎵", LogoPath = "avares://FileNexus.UI/Assets/audio_logo.png", FileCount = 1250, FormattedStorage = "14.2 GB", Percentage = 8.4, BadgeColor = "#8B5CF6" },
+            new CategoryCardViewModel { Category = FileCategory.Code, Name = "Programming", Icon = "💻", LogoPath = "avares://FileNexus.UI/Assets/code_logo.png", FileCount = 2100, FormattedStorage = "3.1 GB", Percentage = 2.2, BadgeColor = "#06B6D4" },
+            new CategoryCardViewModel { Category = FileCategory.Archives, Name = "Archives", Icon = "📦", LogoPath = "avares://FileNexus.UI/Assets/archive_logo.png", FileCount = 180, FormattedStorage = "18.5 GB", Percentage = 10.1, BadgeColor = "#64748B" },
+            new CategoryCardViewModel { Category = FileCategory.Executables, Name = "Executables", Icon = "⚙️", LogoPath = "avares://FileNexus.UI/Assets/executable_logo.png", FileCount = 95, FormattedStorage = "6.4 GB", Percentage = 3.5, BadgeColor = "#EF4444" },
+            new CategoryCardViewModel { Category = FileCategory.Other, Name = "Folders & Other", Icon = "📁", LogoPath = "avares://FileNexus.UI/Assets/folder_logo.png", FileCount = 531, FormattedStorage = "2.2 GB", Percentage = 1.2, BadgeColor = "#94A3B8" }
         ];
 
         RecentFiles =
